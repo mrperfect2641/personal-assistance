@@ -3,10 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <title>Personal-Assistance Dashboard</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- CSS -->
   <link rel="stylesheet" href="style.css" />
+  <!-- Supabase JS SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js/dist/umd/supabase.min.js"></script>
 </head>
 <body>
+
   <!-- Sidebar Navigation -->
   <div class="sidebar">
     <h2>Personal-Assistance</h2>
@@ -14,8 +18,8 @@
       <li><a href="#" id="dashboardLink" class="active">Dashboard</a></li>
       <li><a href="#" id="financeLink">Finance</a></li>
       <li><a href="#" id="todoListLink">Todo List</a></li>
-      <li><a href="#" id="contactsLink">Contacts</a></li>
       <li><a href="#" id="notesLink">Notes</a></li>
+      <li><a href="#" id="contactsLink">Contacts</a></li>
     </ul>
   </div>
 
@@ -65,7 +69,7 @@
     </div>
   </div>
 
-  <!-- Finance Section -->
+  <!-- Finance Section (placeholder) -->
   <div class="main-content" id="financeSection" style="display:none;">
     <h2>Finance</h2>
     <p style="color:#888;">[Finance module coming soon]</p>
@@ -73,8 +77,8 @@
 
   <!-- Todo List Section -->
   <div class="main-content" id="todoSection" style="display:none;">
-    <div class="todo-header-row">
-      <h2>Todo List</h2>
+    <div class="header sticky-header">
+      <div class="welcome">Todo List</div>
       <button class="add-task-btn">+ Add Task</button>
     </div>
     <div class="todo-table-container">
@@ -82,7 +86,7 @@
         <thead>
           <tr>
             <th><input type="checkbox" id="selectAll" /></th>
-            <th>Task</th>
+            <th>Customer</th>
             <th>Status</th>
             <th>Assigned To</th>
             <th>Deadline</th>
@@ -91,318 +95,128 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td><input type="checkbox" /></td>
-            <td>
-              <img
-                class="avatar"
-                src="https://randomuser.me/api/portraits/men/32.jpg"
-                alt="Alexander White"
-              />
-              Create A New React app
-            </td>
-            <td><span class="status-label in-progress">In Progress</span></td>
-            <td>
-              <img
-                class="avatar"
-                src="https://randomuser.me/api/portraits/men/32.jpg"
-                alt="Alexander White"
-              />
-              Alexander White
-            </td>
-            <td>Due in 3 days</td>
-            <td><span class="priority-label high">High</span></td>
-            <td class="actions">
-              <button class="edit" title="Edit">&#9998;</button>
-              <button class="delete" title="Delete">&#10005;</button>
-            </td>
-          </tr>
-          <tr>
-            <td><input type="checkbox" /></td>
-            <td>
-              <img
-                class="avatar"
-                src="https://randomuser.me/api/portraits/women/1.jpg"
-                alt="Sophia Williams"
-              />
-              Finish project report
-            </td>
-            <td><span class="status-label not-started">Not Started</span></td>
-            <td>
-              <img
-                class="avatar"
-                src="https://randomuser.me/api/portraits/women/1.jpg"
-                alt="Sophia Williams"
-              />
-              Sophia Williams
-            </td>
-            <td>15 August 2024</td>
-            <td><span class="priority-label medium">Medium</span></td>
-            <td class="actions">
-              <button class="edit" title="Edit">&#9998;</button>
-              <button class="delete" title="Delete">&#10005;</button>
-            </td>
-          </tr>
-
-          <tr>
-            <td><input type="checkbox" /></td>
-            <td>
-              <img
-                class="avatar"
-                src="https://randomuser.me/api/portraits/men/45.jpg"
-                alt="Michael Carter"
-              />
-              Team meeting preparation
-            </td>
-            <td><span class="status-label completed">Completed</span></td>
-            <td>
-              <img
-                class="avatar"
-                src="https://randomuser.me/api/portraits/men/45.jpg"
-                alt="Michael Carter"
-              />
-              Michael Carter
-            </td>
-            <td>Yesterday</td>
-            <td><span class="priority-label low">Low</span></td>
-            <td class="actions">
-              <button class="edit" title="Edit">&#9998;</button>
-              <button class="delete" title="Delete">&#10005;</button>
-            </td>
-          </tr>
+          <!-- Todo items will load here dynamically -->
         </tbody>
       </table>
     </div>
   </div>
-  <!-- ============================contacts section=========================== -->
-   <!-- Contacts Section -->
-<div class="main-content" id="contactsSection" style="display:none;">
-  <h2>Contacts</h2>
-  <div class="contacts-grid">
-    <!-- Contact Card Example -->
-    <div class="contact-card">
-      <div class="contact-avatar">
-        <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Anna M. Hines" />
-      </div>
-      <div class="contact-info">
-        <div class="contact-name">Anna M. Hines</div>
-        <div class="contact-email">georgia.young@example.com</div>
-        <span class="contact-badge lead">Lead</span>
-      </div>
-    </div>
 
-    <div class="contact-card">
-      <div class="contact-avatar">
-        <img src="https://randomuser.me/api/portraits/men/09.jpg" alt="Philip" />
-      </div>
-      <div class="contact-info">
-        <div class="contact-name">Philip</div>
-        <div class="contact-email">alma.lawson@example.com</div>
-        <span class="contact-badge customer">Customer</span>
-      </div>
+  <!-- Contacts Section -->
+  <div class="main-content" id="contactsSection" style="display:none;">
+    <div class="header sticky-header">
+      <div class="welcome">Contacts</div>
     </div>
-
-    <div class="contact-card">
-      <div class="contact-avatar">
-        <img src="https://randomuser.me/api/portraits/women/12.jpg" alt="Dianne Russell" />
-      </div>
-      <div class="contact-info">
-        <div class="contact-name">Dianne Russell</div>
-        <div class="contact-email">deanna.lawson@example.com</div>
-        <span class="contact-badge lead">Lead</span>
-      </div>
-    </div>
-
-    <div class="contact-card">
-      <div class="contact-avatar">
-        <img src="https://randomuser.me/api/portraits/men/34.jpg" alt="Devon Lane" />
-      </div>
-      <div class="contact-info">
-        <div class="contact-name">Devon Lane</div>
-        <div class="contact-email">neaven.youngstar@example.com</div>
-        <span class="contact-badge customer">Customer</span>
-      </div>
-    </div>
-
-    <div class="contact-card">
-      <div class="contact-avatar">
-        <img src="https://randomuser.me/api/portraits/men/41.jpg" alt="Theresa Webb" />
-      </div>
-      <div class="contact-info">
-        <div class="contact-name">Theresa Webb</div>
-        <div class="contact-email">michelle.rivara@example.com</div>
-        <span class="contact-badge customer">Customer</span>
-      </div>
-    </div>
-
-    <div class="contact-card">
-      <div class="contact-avatar">
-        <img src="https://randomuser.me/api/portraits/women/47.jpg" alt="Leeanna Cline" />
-      </div>
-      <div class="contact-info">
-        <div class="contact-name">Leeanna Cline</div>
-        <div class="contact-email">leeannacline@example.com</div>
-        <span class="contact-badge lead">Lead</span>
-      </div>
-    </div>
-
-    <div class="contact-card">
-      <div class="contact-avatar">
-        <img src="https://randomuser.me/api/portraits/men/44.jpg" alt="David Hardy" />
-      </div>
-      <div class="contact-info">
-        <div class="contact-name">David Hardy</div>
-        <div class="contact-email">davidhardy@example.com</div>
-        <span class="contact-badge customer">Customer</span>
-      </div>
-    </div>
-
-    <div class="contact-card">
-      <div class="contact-avatar">
-        <img src="https://randomuser.me/api/portraits/men/54.jpg" alt="Roland Burgess" />
-      </div>
-      <div class="contact-info">
-        <div class="contact-name">Roland Burgess</div>
-        <div class="contact-email">rolandburgess@example.com</div>
-        <span class="contact-badge lead">Lead</span>
-      </div>
-    </div>
-
-    <div class="contact-card">
-      <div class="contact-avatar">
-        <img src="https://randomuser.me/api/portraits/women/22.jpg" alt="Christina Correa" />
-      </div>
-      <div class="contact-info">
-        <div class="contact-name">Christina Correa</div>
-        <div class="contact-email">christinavorrea@example.com</div>
-        <span class="contact-badge lead">Lead</span>
-      </div>
-    </div>
-
-    <div class="contact-card">
-      <div class="contact-avatar">
-        <img src="https://randomuser.me/api/portraits/women/20.jpg" alt="Kay Haines" />
-      </div>
-      <div class="contact-info">
-        <div class="contact-name">Kay Haines</div>
-        <div class="contact-email">kaychaines@example.com</div>
-        <span class="contact-badge customer">Customer</span>
-      </div>
-    </div>
-
-    <div class="contact-card">
-      <div class="contact-avatar">
-        <img src="https://randomuser.me/api/portraits/women/39.jpg" alt="Christina Correa" />
-      </div>
-      <div class="contact-info">
-        <div class="contact-name">Christina Correa</div>
-        <div class="contact-email">christinavorrea@example.com</div>
-        <span class="contact-badge lead">Lead</span>
-      </div>
-    </div>
-
-    <div class="contact-card">
-      <div class="contact-avatar">
-        <img src="https://randomuser.me/api/portraits/women/33.jpg" alt="Dawn Dow" />
-      </div>
-      <div class="contact-info">
-        <div class="contact-name">Dawn Dow</div>
-        <div class="contact-email">dawnjdow@example.com</div>
-        <span class="contact-badge customer">Customer</span>
-      </div>
+    <div class="contacts-grid">
+      <!-- Contact cards injected dynamically -->
     </div>
   </div>
-</div>
-<!-- ========================================== Contacts Section End --> 
 
-  <!-- Notes Section -->
+  <!-- Notes Section (placeholder) -->
   <div class="main-content" id="notesSection" style="display:none;">
-    <h2>Notes</h2>
+    <div class="header sticky-header">
+      <div class="welcome">Notes</div>
+    </div>
     <p style="color:#888;">[Notes module coming soon]</p>
   </div>
-  <!-- --------------------------------------------------------------------------add task------------- -->
-   <!-- Add New Task Modal -->
-<div id="addModal" class="modal">
-  <div class="modal-content">
-    <span class="close-btn" id="addModalClose">&times;</span>
-    <h3>Add New Todo Task</h3>
-    <form id="addTodoForm">
-      <label for="addTitle">Title</label>
-      <input type="text" id="addTitle" name="title" required />
 
-      <label for="addStatus">Status</label>
-      <select id="addStatus" name="status">
-        <option value="in-progress">In Progress</option>
-        <option value="not-started">Not Started</option>
-        <option value="completed">Completed</option>
-        <option value="inactive">Inactive</option>
-        <option value="active">Active</option>
-      </select>
+  <!-- Add New Task Modal -->
+  <div id="addModal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" id="addModalClose">&times;</span>
+      <h3>Add New Todo Task</h3>
+      <form id="addTodoForm">
+        <label for="addTitle">Title</label>
+        <input type="text" id="addTitle" name="title" required />
 
-      <label for="addAssignedTo">Assigned To</label>
-      <input type="text" id="addAssignedTo" name="assignedTo" required />
+        <label for="addStatus">Status</label>
+        <select id="addStatus" name="status">
+          <option value="in-progress">In Progress</option>
+          <option value="not-started">Not Started</option>
+          <option value="completed">Completed</option>
+          <option value="inactive">Inactive</option>
+          <option value="active">Active</option>
+        </select>
 
-      <label for="addAssignedAvatar">Assigned Avatar URL</label>
-      <input type="text" id="addAssignedAvatar" name="assignedAvatar" placeholder="Paste avatar image URL" required />
+        <label for="addAssignedTo">Assigned To</label>
+        <input type="text" id="addAssignedTo" name="assignedTo" required />
 
-      <label for="addDeadline">Deadline</label>
-      <input type="text" id="addDeadline" name="deadline" placeholder="e.g. Due in 3 days" required />
+        <label for="addAssignedAvatar">Assigned Avatar URL</label>
+        <input type="text" id="addAssignedAvatar" name="assignedAvatar" placeholder="Paste avatar image URL" required />
 
-      <label for="addPriority">Priority</label>
-      <select id="addPriority" name="priority">
-        <option value="high">High</option>
-        <option value="medium">Medium</option>
-        <option value="low">Low</option>
-      </select>
+        <label for="addDeadline">Deadline</label>
+        <input type="text" id="addDeadline" name="deadline" placeholder="e.g. Due in 3 days" required />
 
-      <div class="modal-buttons">
-        <button type="submit" class="save-btn">Add</button>
-        <button type="button" class="cancel-btn" id="addModalCancel">Cancel</button>
-      </div>
-    </form>
+        <label for="addPriority">Priority</label>
+        <select id="addPriority" name="priority">
+          <option value="high">High</option>
+          <option value="medium">Medium</option>
+          <option value="low">Low</option>
+        </select>
+
+        <div class="modal-buttons">
+          <button type="submit" class="save-btn">Add</button>
+          <button type="button" class="cancel-btn" id="addModalCancel">Cancel</button>
+        </div>
+      </form>
+    </div>
   </div>
-</div>
-<!-- ----------------------------------------edit task end---------------------------- -->
+
   <!-- Edit Task Modal -->
-<div id="editModal" class="modal">
-  <div class="modal-content">
-    <span class="close-btn" id="editModalClose">&times;</span>
-    <h3>Edit Todo Task</h3>
-    <form id="editTodoForm">
-      <label for="editTitle">Title</label>
-      <input type="text" id="editTitle" name="title" required />
+  <div id="editModal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" id="editModalClose">&times;</span>
+      <h3>Edit Todo Task</h3>
+      <form id="editTodoForm">
+        <label for="editTitle">Title</label>
+        <input type="text" id="editTitle" name="title" required />
 
-      <label for="editStatus">Status</label>
-      <select id="editStatus" name="status">
-        <option value="in-progress">In Progress</option>
-        <option value="not-started">Not Started</option>
-        <option value="completed">Completed</option>
-        <option value="inactive">Inactive</option>
-        <option value="active">Active</option>
-      </select>
+        <label for="editStatus">Status</label>
+        <select id="editStatus" name="status">
+          <option value="in-progress">In Progress</option>
+          <option value="not-started">Not Started</option>
+          <option value="completed">Completed</option>
+          <option value="inactive">Inactive</option>
+          <option value="active">Active</option>
+        </select>
 
-      <label for="editAssignedTo">Assigned To</label>
-      <input type="text" id="editAssignedTo" name="assignedTo" required />
+        <label for="editAssignedTo">Assigned To</label>
+        <input type="text" id="editAssignedTo" name="assignedTo" required />
 
-      <label for="editDeadline">Deadline</label>
-      <input type="text" id="editDeadline" name="deadline" placeholder="e.g. Due in 3 days or 15 August 2024" required />
+        <label for="editDeadline">Deadline</label>
+        <input type="text" id="editDeadline" name="deadline" placeholder="e.g. Due in 3 days or 15 August 2024" required />
 
-      <label for="editPriority">Priority</label>
-      <select id="editPriority" name="priority">
-        <option value="high">High</option>
-        <option value="medium">Medium</option>
-        <option value="low">Low</option>
-      </select>
+        <label for="editPriority">Priority</label>
+        <select id="editPriority" name="priority">
+          <option value="high">High</option>
+          <option value="medium">Medium</option>
+          <option value="low">Low</option>
+        </select>
 
-      <div class="modal-buttons">
-        <button type="submit" class="save-btn">Save</button>
-        <button type="button" class="cancel-btn" id="editModalCancel">Cancel</button>
-      </div>
-    </form>
+        <div class="modal-buttons">
+          <button type="submit" class="save-btn">Save</button>
+          <button type="button" class="cancel-btn" id="editModalCancel">Cancel</button>
+        </div>
+      </form>
+    </div>
   </div>
-</div>
 
-  <!-- Link to JS -->
+  <!-- Your main script -->
   <script src="script.js"></script>
+  <script>
+    // Initialize Supabase client with your project's URL and public anon key
+    // Replace these placeholders with your actual Supabase project credentials
+    const SUPABASE_URL = 'https://teafrrntffzraoiuurie.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRlYWZycm50ZmZ6cmFvaXV1cmllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM1OTMwMzgsImV4cCI6MjA2OTE2OTAzOH0.EZ7Lkxo_H1lZMMMH9OmjqKm3ALcIRripTzYrz7FosZs';
+
+    // Expose supabase client globally for your script.js
+    window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // You may want to immediately load data here or in your script.js logic
+    // Example calls after DOM is loaded:
+    document.addEventListener('DOMContentLoaded', function () {
+      if (typeof loadTodos === 'function') loadTodos();
+      if (typeof loadContacts === 'function') loadContacts();
+    });
+  </script>
 </body>
 </html>

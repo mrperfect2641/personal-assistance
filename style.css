@@ -1,12 +1,18 @@
+/* ================================== */
 /* General Body Styling */
+/* ================================== */
 body {
   margin: 0;
   font-family: 'Inter', Arial, sans-serif;
   background: #f7fafc;
   color: #22223b;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
+/* ================================== */
 /* Sidebar Styling */
+/* ================================== */
 .sidebar {
   width: 220px;
   background: #fff;
@@ -15,6 +21,7 @@ body {
   box-shadow: 2px 0 8px rgba(0, 0, 0, 0.03);
   padding-top: 20px;
   transition: width 0.3s;
+  overflow-y: auto;
 }
 
 /* Sidebar Logo / Title */
@@ -31,6 +38,7 @@ body {
 .sidebar ul {
   list-style: none;
   padding: 0 24px;
+  margin: 0;
 }
 
 /* Sidebar Menu Items */
@@ -49,6 +57,9 @@ body {
   font-size: 1.09em;
   font-weight: 500;
   user-select: none; /* Prevent text selection */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Active and Hover State for Menu Items */
@@ -58,17 +69,30 @@ body {
   color: #005edd;
 }
 
+/* ================================== */
 /* Main Content Area */
+/* ================================== */
 .main-content {
   margin-left: 240px; /* Width of sidebar */
   padding: 32px 32px 42px 32px;
   min-height: 100vh;
   background: #f7fafc;
   transition: margin-left 0.3s;
+  box-sizing: border-box;
+  overflow-y: auto;
 }
 
-/* Header in Main Content */
+/* ================================== */
+/* Header - Sticky Top for all Sections */
+/* ================================== */
 .header {
+  position: sticky;
+  top: 0;
+  background: #f7fafc; /* Match main content background */
+  padding-top: 20px;   /* Vertical padding */
+  padding-bottom: 12px;
+  z-index: 10;         /* Appear above scrolling content */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07); /* subtle shadow for separation */
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -78,10 +102,11 @@ body {
 .header .welcome {
   font-weight: 600;
   font-size: 1.2em;
-  margin-bottom: 12px;
+  margin: 0; /* Already spaced with header padding */
+  user-select: none;
 }
 
-/* Profile Section */
+/* Profile Section on header */
 .profile {
   display: flex;
   align-items: center;
@@ -97,40 +122,38 @@ body {
   display: inline-block;
 }
 
-/* Dashboard Cards Container */
+/* ================================== */
+/* Dashboard Cards Layout */
+/* ================================== */
 .cards {
   display: flex;
   gap: 24px;
   margin: 32px 0;
+  flex-wrap: wrap;
 }
-
-/* Individual Card Styling */
 .card {
   background: #fff;
   border-radius: 10px;
   box-shadow: 0 2px 12px rgba(60, 60, 60, 0.04);
-  flex: 1; /* Equal flex grow */
+  flex: 1 1 220px; /* Flexible with min width */
   padding: 24px;
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
-
 /* Card Title */
 .card-title {
   color: #9293a6;
   font-size: 1.05em;
   margin-bottom: 8px;
 }
-
-/* Main Card Value */
+/* Card Value */
 .card-value {
   font-size: 2em;
   font-weight: 700;
   color: #22223b;
 }
-
-/* Stats Text */
+/* Stats */
 .stats {
   color: #19c37d; /* Green for positive */
   font-size: 0.95em;
@@ -138,36 +161,32 @@ body {
   align-items: center;
   gap: 4px;
 }
-
-/* Negative Stats (e.g., decrease) */
 .stats.negative {
   color: #eb4359; /* Red for negative */
 }
 
-/* Chart Area Container */
+/* ================================== */
+/* Chart Area Styling */
+/* ================================== */
 .charts-row {
   display: flex;
   gap: 24px;
   margin-top: 32px;
+  flex-wrap: wrap;
 }
-
-/* Individual Chart Box */
 .chart {
   background: #fff;
-  flex: 1;
+  flex: 1 1 300px;
   border-radius: 12px;
   padding: 24px;
   min-height: 250px;
   box-shadow: 0 2px 10px rgba(60, 60, 60, 0.05);
 }
-
-/* Chart Title */
 .chart-title {
   font-weight: 600;
   margin-bottom: 10px;
+  user-select: none;
 }
-
-/* Placeholder for Charts */
 .chart-placeholder {
   height: 160px;
   display: flex;
@@ -176,59 +195,78 @@ body {
   color: #bbb;
   background: #f6f8fb;
   border-radius: 8px;
+  user-select: none;
 }
 
-/* Heading Styling for Sections */
-h2 {
-  font-size: 1.6em;
-  margin-bottom: 14px;
+/* ================================== */
+/* Todo List Styles */
+/* ================================== */
+/* Header within Todo List (besides main header) */
+.todo-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+.add-task-btn {
+  background: #5A8DEE;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 20px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-weight: 600;
+  user-select: none;
+}
+.add-task-btn:hover {
+  background: #3756b5;
 }
 
-/* Container for Todo Table */
+/* Container for Todo table */
 .todo-table-container {
   background: #fff;
   border-radius: 10px;
   box-shadow: 0 3px 16px rgba(60, 60, 100, 0.06);
   padding: 18px 8px;
   margin-top: 6px;
-  overflow-x: auto; /* Horizontal scroll on small screens */
+  overflow-x: auto;
 }
 
-/* Todo List Table */
+/* Todo Table Styles */
 .todo-table {
   width: 100%;
-  border-collapse: separate; /* Needed for border-spacing */
+  border-collapse: separate;
   border-spacing: 0;
   font-size: 1em;
   background: #fff;
 }
 
-/* Table headers and cells */
 .todo-table th,
 .todo-table td {
   text-align: left;
   padding: 13px 10px 12px 10px;
 }
 
-/* Table header styling */
 .todo-table th {
   color: #727294;
   font-weight: 700;
   background: #f0f2f6;
   font-size: 0.97em;
   border-bottom: 2px solid #e6e8f1;
-  position: sticky; /* Sticky header */
+  position: sticky;
   top: 0;
-  z-index: 2;
+  z-index: 20;
+  user-select: none;
 }
 
-/* Table cells */
 .todo-table td {
   vertical-align: middle;
   border-bottom: 1px solid #f1f2f5;
 }
 
-/* Avatars in Todo Table */
+/* Avatar for todo items */
 .todo-table .avatar {
   width: 32px;
   height: 32px;
@@ -240,7 +278,7 @@ h2 {
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.063);
 }
 
-/* Status Label Styles */
+/* Status Labels */
 .status-label {
   display: inline-block;
   font-size: 0.9em;
@@ -252,7 +290,7 @@ h2 {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.063);
 }
 
-/* Different Status Background Colors */
+/* Status variants */
 .status-label.in-progress {
   background: #5A8DEE;
 }
@@ -269,7 +307,7 @@ h2 {
   background: #2ED8B6;
 }
 
-/* Priority Label Styles */
+/* Priority Labels */
 .priority-label {
   border-radius: 10px;
   padding: 2px 14px;
@@ -277,8 +315,6 @@ h2 {
   font-weight: 500;
   display: inline-block;
 }
-
-/* Priority Colors and Backgrounds */
 .priority-label.high {
   color: #e04141;
   background: #ffeaea;
@@ -292,7 +328,7 @@ h2 {
   background: #e8fafc;
 }
 
-/* Action Buttons in Todo Table */
+/* Action buttons (edit/delete) */
 .todo-table .actions button {
   background: none;
   border: none;
@@ -303,16 +339,12 @@ h2 {
   font-size: 1.13em;
   transition: background 0.16s;
 }
-
-/* Edit Button */
 .todo-table .actions .edit {
   color: #2196f3;
 }
 .todo-table .actions .edit:hover {
   background: #e4edfd;
 }
-
-/* Delete Button */
 .todo-table .actions .delete {
   color: #e04141;
 }
@@ -320,175 +352,18 @@ h2 {
   background: #ffeaea;
 }
 
-/* Checkbox Styling */
+/* Checkbox style */
 .todo-table input[type="checkbox"] {
   width: 18px;
   height: 18px;
-  accent-color: #5A8DEE; /* Color of checkbox on supported browsers */
+  accent-color: #5A8DEE; /* Modern browsers */
   vertical-align: middle;
 }
 
-/* Header row containing title and Add Task button */
-.todo-header-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-}
+/* ================================== */
+/* Contacts Styles */
+/* ================================== */
 
-/* Add Task Button Styling */
-.add-task-btn {
-  background: #5A8DEE;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  padding: 8px 20px;
-  font-size: 1em;
-  cursor: pointer;
-  transition: background 0.2s;
-  font-weight: 600;
-  user-select: none; /* Prevent text selection */
-}
-.add-task-btn:hover {
-  background: #3756b5;
-}
-
-/* Responsive Adjustments */
-@media (max-width: 900px) {
-  /* Sidebar Width Reduction */
-  .sidebar {
-    width: 56px;
-  }
-  /* Reduce margin to match sidebar */
-  .main-content {
-    margin-left: 70px;
-    padding: 16px;
-  }
-  /* Dashboard Cards Stack vertically */
-  .cards {
-    flex-direction: column;
-    gap: 14px;
-  }
-  /* Charts Stack vertically */
-  .charts-row {
-    flex-direction: column;
-    gap: 14px;
-  }
-  /* Reduce padding for todo table container */
-  .todo-table-container {
-    padding: 6px 2px;
-  }
-  /* Reduce cell padding for smaller screens */
-  .todo-table th,
-  .todo-table td {
-    padding: 10px 6px;
-  }
-}
-
-/* Modal window background overlay */
-.modal {
-  display: none; /* Hidden by default */
-  position: fixed; 
-  z-index: 1000; /* Front of everything */
-  left: 0;
-  top: 0;
-  width: 100vw;
-  height: 100vh;
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgba(0, 0, 0, 0.6); /* Dark overlay */
-}
-
-/* Modal content box */
-.modal-content {
-  background-color: #fff;
-  margin: 6% auto; /* Vertically center, adapt by screen */
-  padding: 24px 30px;
-  border-radius: 10px;
-  max-width: 430px;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.10);
-  position: relative;
-}
-
-/* Close button top right */
-.close-btn {
-  color: #aaa;
-  float: right;
-  font-size: 26px;
-  font-weight: bold;
-  cursor: pointer;
-  user-select: none;
-  position: absolute;
-  right: 18px;
-  top: 18px;
-  transition: color 0.2s;
-}
-.close-btn:hover {
-  color: #000;
-}
-
-/* Form labels and inputs styling */
-.modal-content label {
-  display: block;
-  font-size: 0.95em;
-  margin-bottom: 4px;
-  font-weight: 600;
-  color: #555;
-  user-select: none;
-}
-.modal-content input[type="text"], 
-.modal-content select {
-  width: 100%;
-  padding: 8px 10px;
-  margin-bottom: 18px;
-  border: 1.5px solid #ddd;
-  border-radius: 6px;
-  font-size: 1em;
-  transition: border-color 0.3s;
-}
-.modal-content input[type="text"]:focus,
-.modal-content select:focus {
-  border-color: #5A8DEE;
-  outline: none;
-}
-
-/* Buttons container in modal */
-.modal-buttons {
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-}
-
-/* Save button */
-.save-btn {
-  background-color: #5A8DEE;
-  color: white;
-  border: none;
-  padding: 10px 22px;
-  border-radius: 7px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-.save-btn:hover {
-  background-color: #3756b5;
-}
-
-/* Cancel button */
-.cancel-btn {
-  background-color: #eee;
-  color: #555;
-  border: none;
-  padding: 10px 22px;
-  border-radius: 7px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-.cancel-btn:hover {
-  background-color: #ddd;
-}
-
-/* Contacts grid and cards */
 .contacts-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -500,7 +375,7 @@ h2 {
 .contact-card {
   background: #fff;
   border-radius: 10px;
-  box-shadow: 0 3px 16px rgba(60,60,100,0.07);
+  box-shadow: 0 3px 16px rgba(60, 60, 100, 0.07);
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -560,4 +435,150 @@ h2 {
   font-weight: 600;
   padding: 3px 15px;
   letter-spacing: 0.02em;
+}
+
+/* ================================== */
+/* Modal Window Styles (Add/Edit) */
+/* ================================== */
+
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed;
+  z-index: 1000; /* On top */
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.6);
+  -webkit-overflow-scrolling: touch;
+}
+
+.modal-content {
+  background-color: #fff;
+  margin: 6% auto;
+  padding: 24px 30px;
+  border-radius: 10px;
+  max-width: 430px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+  position: relative;
+  user-select: none;
+}
+
+.close-btn {
+  color: #aaa;
+  float: right;
+  font-size: 26px;
+  font-weight: bold;
+  cursor: pointer;
+  user-select: none;
+  position: absolute;
+  right: 18px;
+  top: 18px;
+  transition: color 0.2s;
+}
+.close-btn:hover {
+  color: #000;
+}
+
+/* Form Labels and Inputs */
+.modal-content label {
+  display: block;
+  font-size: 0.95em;
+  margin-bottom: 4px;
+  font-weight: 600;
+  color: #555;
+  user-select: text;
+}
+.modal-content input[type="text"], 
+.modal-content select {
+  width: 100%;
+  padding: 8px 10px;
+  margin-bottom: 18px;
+  border: 1.5px solid #ddd;
+  border-radius: 6px;
+  font-size: 1em;
+  transition: border-color 0.3s;
+  user-select: text;
+}
+.modal-content input[type="text"]:focus,
+.modal-content select:focus {
+  border-color: #5A8DEE;
+  outline: none;
+}
+
+/* Modal Buttons Container */
+.modal-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+/* Save/Add Button */
+.save-btn {
+  background-color: #5A8DEE;
+  color: white;
+  border: none;
+  padding: 10px 22px;
+  border-radius: 7px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  user-select: none;
+}
+.save-btn:hover {
+  background-color: #3756b5;
+}
+
+/* Cancel Button */
+.cancel-btn {
+  background-color: #eee;
+  color: #555;
+  border: none;
+  padding: 10px 22px;
+  border-radius: 7px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  user-select: none;
+}
+.cancel-btn:hover {
+  background-color: #ddd;
+}
+
+/* ================================== */
+/* Responsive Design */
+/* ================================== */
+@media (max-width: 900px) {
+  /* Sidebar shrink */
+  .sidebar {
+    width: 56px;
+  }
+  /* reduce main content left margin */
+  .main-content {
+    margin-left: 70px;
+    padding: 16px;
+  }
+  /* stack cards vertically */
+  .cards {
+    flex-direction: column;
+    gap: 14px;
+  }
+  /* stack charts vertically */
+  .charts-row {
+    flex-direction: column;
+    gap: 14px;
+  }
+  /* todo table and padding */
+  .todo-table-container {
+    padding: 6px 2px;
+  }
+  .todo-table th,
+  .todo-table td {
+    padding: 10px 6px;
+  }
+  /* contact card grid columns */
+  .contacts-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
 }

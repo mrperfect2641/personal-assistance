@@ -1,330 +1,24 @@
-// ================================
-// Sidebar Navigation and Content Switching
-// ================================
+// ========== SUPABASE INITIALIZATION ==========
+// Insert your actual project API values!
+const SUPABASE_URL = 'https://teafrrntffzraoiuurie.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRlYWZycm50ZmZ6cmFvaXV1cmllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM1OTMwMzgsImV4cCI6MjA2OTE2OTAzOH0.EZ7Lkxo_H1lZMMMH9OmjqKm3ALcIRripTzYrz7FosZs';
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// Get sidebar link elements by their IDs
+// ========== SIDEBAR NAVIGATION ==========
+
 const dashboardLink = document.getElementById('dashboardLink');
 const financeLink = document.getElementById('financeLink');
 const todoLink = document.getElementById('todoListLink');
 const notesLink = document.getElementById('notesLink');
+const contactsLink = document.getElementById('contactsLink');
 
-// Get main content sections by their IDs
 const dashboardSection = document.getElementById('dashboardSection');
 const financeSection = document.getElementById('financeSection');
 const todoSection = document.getElementById('todoSection');
 const notesSection = document.getElementById('notesSection');
-
-// Get all sidebar links (for clearing active state)
-const sidebarLinks = document.querySelectorAll('.sidebar ul li a');
-
-/**
- * Hide all main content sections
- */
-function hideAllSections() {
-  dashboardSection.style.display = 'none';
-  financeSection.style.display = 'none';
-  todoSection.style.display = 'none';
-  notesSection.style.display = 'none';
-}
-
-/**
- * Remove 'active' class from all sidebar links
- */
-function clearSidebarActive() {
-  sidebarLinks.forEach(link => link.classList.remove('active'));
-}
-
-// Event handler to show Dashboard section
-dashboardLink.onclick = function(e) {
-  e.preventDefault();
-  hideAllSections();
-  dashboardSection.style.display = 'block';
-  clearSidebarActive();
-  dashboardLink.classList.add('active');
-};
-
-// Event handler to show Finance section
-financeLink.onclick = function(e) {
-  e.preventDefault();
-  hideAllSections();
-  financeSection.style.display = 'block';
-  clearSidebarActive();
-  financeLink.classList.add('active');
-};
-
-// Event handler to show Todo List section
-todoLink.onclick = function(e) {
-  e.preventDefault();
-  hideAllSections();
-  todoSection.style.display = 'block';
-  clearSidebarActive();
-  todoLink.classList.add('active');
-};
-
-// Event handler to show Notes section
-notesLink.onclick = function(e) {
-  e.preventDefault();
-  hideAllSections();
-  notesSection.style.display = 'block';
-  clearSidebarActive();
-  notesLink.classList.add('active');
-};
-
-/**
- * Initialize default visible section and active menu on page load
- */
-window.onload = function() {
-  hideAllSections();
-  dashboardSection.style.display = 'block'; // Show dashboard by default
-  clearSidebarActive();
-  dashboardLink.classList.add('active');
-};
-
-// ================================
-// Todo List Specific Functionality
-// ================================
-
-/**
- * Delete a todo task row when Delete button is clicked, with a confirmation prompt
- */
-document.addEventListener('click', function(event) {
-  if (event.target.closest('.actions .delete')) {
-    if (confirm('Delete this task?')) {
-      event.target.closest('tr').remove();
-    }
-  }
-});
-
-/**
- * Select/Deselect all checkboxes in the Todo List when header "select all" checkbox is changed
- */
-const selectAllCheckbox = document.getElementById('selectAll');
-if (selectAllCheckbox) {
-  selectAllCheckbox.addEventListener('change', function() {
-    // Get all todo task checkboxes in tbody (excluding the header checkbox itself)
-    const checkboxes = document.querySelectorAll('#todoTable tbody input[type="checkbox"]');
-    checkboxes.forEach(cb => {
-      cb.checked = selectAllCheckbox.checked;
-    });
-  });
-}
-
-// ================================
-// Edit Modal Handling for Todo List
-// ================================
-
-// Get modal and elements
-const editModal = document.getElementById('editModal');
-const editModalClose = document.getElementById('editModalClose');
-const editModalCancel = document.getElementById('editModalCancel');
-const editTodoForm = document.getElementById('editTodoForm');
-
-// Form fields for editing
-const editTitle = document.getElementById('editTitle');
-const editStatus = document.getElementById('editStatus');
-const editAssignedTo = document.getElementById('editAssignedTo');
-const editDeadline = document.getElementById('editDeadline');
-const editPriority = document.getElementById('editPriority');
-
-let editingRow = null; // Current row being edited
-
-/**
- * Open the edit modal and populate form fields with existing row data
- * @param {HTMLTableRowElement} row Row to edit
- */
-function openEditModal(row) {
-  editingRow = row;
-
-  // Extract title text (excluding avatar img)
-  const titleTd = row.cells[1];
-  let titleText = '';
-  for (const node of titleTd.childNodes) {
-    if (node.nodeType === Node.TEXT_NODE) {
-      titleText += node.textContent.trim();
-    }
-  }
-  editTitle.value = titleText;
-
-  // Extract status class or fallback to text
-  const statusSpan = row.cells[2].querySelector('span.status-label');
-  let statusClass = 'not-started';
-  if (statusSpan) {
-    const classes = Array.from(statusSpan.classList);
-    statusClass = classes.find(c => c !== 'status-label') || statusSpan.textContent.toLowerCase().replace(/\s+/g, '-');
-  }
-  editStatus.value = statusClass;
-
-  // Extract assigned to text (excluding avatar img)
-  const assignedTd = row.cells[3];
-  let assignedText = '';
-  for (const node of assignedTd.childNodes) {
-    if (node.nodeType === Node.TEXT_NODE) {
-      assignedText += node.textContent.trim();
-    }
-  }
-  editAssignedTo.value = assignedText;
-
-  // Deadline text
-  editDeadline.value = row.cells[4].textContent.trim();
-
-  // Extract priority class or fallback
-  const prioritySpan = row.cells[5].querySelector('span.priority-label');
-  let priorityClass = 'medium';
-  if (prioritySpan) {
-    const pClasses = Array.from(prioritySpan.classList);
-    priorityClass = pClasses.find(c => ['high', 'medium', 'low'].includes(c)) || 'medium';
-  }
-  editPriority.value = priorityClass;
-
-  // Show modal
-  editModal.style.display = 'block';
-}
-
-/**
- * Close the edit modal and reset editing state
- */
-function closeEditModal() {
-  editModal.style.display = 'none';
-  editingRow = null;
-}
-
-// Delegate click event for Edit buttons to open modal
-document.addEventListener('click', function(event) {
-  if (event.target.closest('.actions .edit')) {
-    const row = event.target.closest('tr');
-    if (row) {
-      openEditModal(row);
-    }
-  }
-});
-
-// Close modal on clicking "X" or Cancel button
-editModalClose.addEventListener('click', closeEditModal);
-editModalCancel.addEventListener('click', closeEditModal);
-
-// Close modal when clicking outside modal content
-window.addEventListener('click', (event) => {
-  if (event.target === editModal) {
-    closeEditModal();
-  }
-});
-
-// Handle form submission for saving edited task data
-editTodoForm.addEventListener('submit', function(event) {
-  event.preventDefault();
-  if (!editingRow) return;
-
-  // Update title cell (index 1)
-  const titleTd = editingRow.cells[1];
-  const avatarImg = titleTd.querySelector('img');
-  titleTd.textContent = ''; // Clear existing text nodes
-  if (avatarImg) titleTd.appendChild(avatarImg);
-  titleTd.append(' ' + editTitle.value);
-
-  // Update status cell (index 2)
-  const statusTd = editingRow.cells[2];
-  const spanStatus = statusTd.querySelector('span.status-label');
-  if (spanStatus) {
-    spanStatus.textContent = editStatus.options[editStatus.selectedIndex].text;
-    spanStatus.className = 'status-label ' + editStatus.value;
-  }
-
-  // Update assigned to cell (index 3)
-  const assignedTd = editingRow.cells[3];
-  const avatarAssigned = assignedTd.querySelector('img');
-  assignedTd.textContent = '';
-  if (avatarAssigned) assignedTd.appendChild(avatarAssigned);
-  assignedTd.append(' ' + editAssignedTo.value);
-
-  // Update deadline cell (index 4)
-  editingRow.cells[4].textContent = editDeadline.value;
-
-  // Update priority cell (index 5)
-  const priorityTd = editingRow.cells[5];
-  const spanPriority = priorityTd.querySelector('span.priority-label');
-  if (spanPriority) {
-    spanPriority.textContent = editPriority.options[editPriority.selectedIndex].text;
-    spanPriority.className = 'priority-label ' + editPriority.value;
-  }
-
-  // Close modal after saving
-  closeEditModal();
-});
-
-// ================================
-// Add New Task Modal Handling
-// ================================
-
-// Get modal and elements related to adding
-const addModal = document.getElementById('addModal');
-const addModalClose = document.getElementById('addModalClose');
-const addModalCancel = document.getElementById('addModalCancel');
-const addTodoForm = document.getElementById('addTodoForm');
-
-// "Add Task" button opens the add modal
-const addTaskBtn = document.querySelector('.add-task-btn');
-if (addTaskBtn) {
-  addTaskBtn.addEventListener('click', function () {
-    addModal.style.display = 'block';
-    addTodoForm.reset();
-  });
-}
-
-// Close Add Modal helper
-function closeAddModal() {
-  addModal.style.display = 'none';
-}
-addModalClose.addEventListener('click', closeAddModal);
-addModalCancel.addEventListener('click', closeAddModal);
-// Close add modal when clicking outside modal content
-window.addEventListener('click', (event) => {
-  if (event.target === addModal) {
-    closeAddModal();
-  }
-});
-
-// Handle Add New Task form submission to add new todo row
-addTodoForm.addEventListener('submit', function (event) {
-  event.preventDefault();
-
-  // Collect form values
-  const title = document.getElementById('addTitle').value;
-  const statusValue = document.getElementById('addStatus').value;
-  const statusText = document.getElementById('addStatus').options[document.getElementById('addStatus').selectedIndex].text;
-  const assignedTo = document.getElementById('addAssignedTo').value;
-  const assignedAvatar = document.getElementById('addAssignedAvatar').value;
-  const deadline = document.getElementById('addDeadline').value;
-  const priorityValue = document.getElementById('addPriority').value;
-  const priorityText = document.getElementById('addPriority').options[document.getElementById('addPriority').selectedIndex].text;
-
-  // Create new table row
-  const tbody = document.querySelector('#todoTable tbody');
-  const tr = document.createElement('tr');
-  tr.innerHTML = `
-    <td><input type="checkbox"></td>
-    <td>
-      <img class="avatar" src="${assignedAvatar}" alt="${assignedTo}" />
-      ${title}
-    </td>
-    <td><span class="status-label ${statusValue}">${statusText}</span></td>
-    <td>
-      <img class="avatar" src="${assignedAvatar}" alt="${assignedTo}" />
-      ${assignedTo}
-    </td>
-    <td>${deadline}</td>
-    <td><span class="priority-label ${priorityValue}">${priorityText}</span></td>
-    <td class="actions">
-      <button class="edit" title="Edit">&#9998;</button>
-      <button class="delete" title="Delete">&#10005;</button>
-    </td>
-  `;
-  tbody.appendChild(tr);
-  closeAddModal();
-});
-
-// Navigation for Contacts section
-const contactsLink = document.getElementById('contactsLink');
 const contactsSection = document.getElementById('contactsSection');
+
+const sidebarLinks = document.querySelectorAll('.sidebar ul li a');
 
 function hideAllSections() {
   dashboardSection.style.display = 'none';
@@ -333,11 +27,276 @@ function hideAllSections() {
   notesSection.style.display = 'none';
   contactsSection.style.display = 'none';
 }
+function clearSidebarActive() {
+  sidebarLinks.forEach(link => link.classList.remove('active'));
+}
 
+dashboardLink.onclick = function(e) {
+  e.preventDefault();
+  hideAllSections();
+  dashboardSection.style.display = 'block';
+  clearSidebarActive();
+  dashboardLink.classList.add('active');
+};
+financeLink.onclick = function(e) {
+  e.preventDefault();
+  hideAllSections();
+  financeSection.style.display = 'block';
+  clearSidebarActive();
+  financeLink.classList.add('active');
+};
+todoLink.onclick = function(e) {
+  e.preventDefault();
+  hideAllSections();
+  todoSection.style.display = 'block';
+  clearSidebarActive();
+  todoLink.classList.add('active');
+  // Load latest todos when shown
+  loadTodos();
+};
+notesLink.onclick = function(e) {
+  e.preventDefault();
+  hideAllSections();
+  notesSection.style.display = 'block';
+  clearSidebarActive();
+  notesLink.classList.add('active');
+};
 contactsLink.onclick = function(e) {
   e.preventDefault();
   hideAllSections();
   contactsSection.style.display = 'block';
   clearSidebarActive();
   contactsLink.classList.add('active');
+  // Load latest contacts when shown
+  loadContacts();
 };
+
+window.onload = function() {
+  hideAllSections();
+  dashboardSection.style.display = 'block';
+  clearSidebarActive();
+  dashboardLink.classList.add('active');
+  // Optionally auto-load todos and contacts for first view
+  loadTodos();
+  loadContacts();
+};
+
+// ========== TODO LIST CRUD ==========
+
+// Helpers: for status/prio formatting
+function formatStatus(str) { return str.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()); }
+function capitalize(str) { return str.slice(0,1).toUpperCase() + str.slice(1); }
+
+// ----- LOAD & RENDER TODOS -----
+async function loadTodos() {
+  const tbody = document.querySelector('#todoTable tbody');
+  if (!tbody) return;
+  tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#888;">Loading...</td></tr>';
+  const { data: todos, error } = await supabase.from('todos').select('*').order('id', { ascending: true });
+  if (error) {
+    tbody.innerHTML = `<tr><td colspan="7" style="color:red;">Error loading todos</td></tr>`;
+    return;
+  }
+  if (!todos || todos.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="7" style="color:#888;">No todo tasks yet.</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = '';
+  todos.forEach(todo => {
+    const tr = document.createElement('tr');
+    tr.dataset.id = todo.id;
+    tr.innerHTML = `
+      <td><input type="checkbox" /></td>
+      <td>
+        <img class="avatar" src="${todo.assigned_avatar}" alt="${todo.assigned_to}" />
+        ${todo.title}
+      </td>
+      <td><span class="status-label ${todo.status}">${formatStatus(todo.status)}</span></td>
+      <td>
+        <img class="avatar" src="${todo.assigned_avatar}" alt="${todo.assigned_to}" />
+        ${todo.assigned_to}
+      </td>
+      <td>${todo.deadline}</td>
+      <td><span class="priority-label ${todo.priority}">${capitalize(todo.priority)}</span></td>
+      <td class="actions">
+        <button class="edit" title="Edit" data-id="${todo.id}">&#9998;</button>
+        <button class="delete" title="Delete" data-id="${todo.id}">&#10005;</button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+// ----- ADD NEW TASK -----
+const addModal = document.getElementById('addModal');
+const addModalClose = document.getElementById('addModalClose');
+const addModalCancel = document.getElementById('addModalCancel');
+const addTodoForm = document.getElementById('addTodoForm');
+const addTaskBtn = document.querySelector('.add-task-btn');
+
+if (addTaskBtn) {
+  addTaskBtn.addEventListener('click', function () {
+    addModal.style.display = 'block';
+    addTodoForm.reset();
+  });
+}
+function closeAddModal() { addModal.style.display = 'none'; }
+addModalClose && addModalClose.addEventListener('click', closeAddModal);
+addModalCancel && addModalCancel.addEventListener('click', closeAddModal);
+window.addEventListener('click', (event) => { if (event.target === addModal) closeAddModal(); });
+
+addTodoForm.addEventListener('submit', async function (event) {
+  event.preventDefault();
+  const title = document.getElementById('addTitle').value;
+  const statusValue = document.getElementById('addStatus').value;
+  const assignedTo = document.getElementById('addAssignedTo').value;
+  const assignedAvatar = document.getElementById('addAssignedAvatar').value;
+  const deadline = document.getElementById('addDeadline').value;
+  const priorityValue = document.getElementById('addPriority').value;
+  // Insert into supabase
+  const { error } = await supabase.from('todos').insert([{
+    title, status: statusValue, assigned_to: assignedTo,
+    assigned_avatar: assignedAvatar, deadline,
+    priority: priorityValue
+  }]);
+  if (error) alert('Add failed! ' + error.message);
+  closeAddModal();
+  loadTodos();
+});
+
+// ----- EDIT TASK -----
+const editModal = document.getElementById('editModal');
+const editModalClose = document.getElementById('editModalClose');
+const editModalCancel = document.getElementById('editModalCancel');
+const editTodoForm = document.getElementById('editTodoForm');
+const editTitle = document.getElementById('editTitle');
+const editStatus = document.getElementById('editStatus');
+const editAssignedTo = document.getElementById('editAssignedTo');
+const editDeadline = document.getElementById('editDeadline');
+const editPriority = document.getElementById('editPriority');
+let editingTodoId = null;
+let editingAvatarUrl = '';
+
+document.addEventListener('click', function(event) {
+  // Open edit modal on edit button click
+  const editBtn = event.target.closest('.actions .edit');
+  if (editBtn) {
+    // Grab row data
+    const row = editBtn.closest('tr');
+    editingTodoId = editBtn.dataset.id;
+    // Title (after avatar)
+    let titleText = '';
+    const titleTd = row.cells[1];
+    for (const node of titleTd.childNodes) {
+      if (node.nodeType === Node.TEXT_NODE) titleText += node.textContent.trim();
+    }
+    editTitle.value = titleText;
+    // Status
+    const statusSpan = row.cells[2].querySelector('span.status-label');
+    let statusClass = 'not-started';
+    if (statusSpan) {
+      const classes = Array.from(statusSpan.classList);
+      statusClass = classes.find(c => c !== 'status-label') || statusSpan.textContent.toLowerCase().replace(/\s+/g, '-');
+    }
+    editStatus.value = statusClass;
+    // Assigned To
+    let assignedText = '';
+    const assignedTd = row.cells[3];
+    for (const node of assignedTd.childNodes) {
+      if (node.nodeType === Node.TEXT_NODE) assignedText += node.textContent.trim();
+    }
+    editAssignedTo.value = assignedText;
+    // Extract assigned avatar
+    const avatarAssigned = assignedTd.querySelector('img');
+    editingAvatarUrl = avatarAssigned ? avatarAssigned.src : '';
+    // Deadline
+    editDeadline.value = row.cells[4].textContent.trim();
+    // Priority
+    const prioritySpan = row.cells[5].querySelector('span.priority-label');
+    let priorityClass = 'medium';
+    if (prioritySpan) {
+      const pClasses = Array.from(prioritySpan.classList);
+      priorityClass = pClasses.find(c => ['high','medium','low'].includes(c)) || 'medium';
+    }
+    editPriority.value = priorityClass;
+    // Show modal
+    editModal.style.display = 'block';
+  }
+  // Delete action
+  const deleteBtn = event.target.closest('.actions .delete');
+  if (deleteBtn) {
+    const todoId = deleteBtn.dataset.id;
+    if (confirm('Delete this task?')) {
+      supabase.from('todos').delete().eq('id', todoId).then(() => loadTodos());
+    }
+  }
+});
+
+function closeEditModal() {
+  editModal.style.display = 'none';
+  editingTodoId = null;
+  editingAvatarUrl = '';
+}
+editModalClose && editModalClose.addEventListener('click', closeEditModal);
+editModalCancel && editModalCancel.addEventListener('click', closeEditModal);
+window.addEventListener('click', (event) => { if (event.target === editModal) closeEditModal(); });
+
+editTodoForm.addEventListener('submit', async function(event) {
+  event.preventDefault();
+  if (!editingTodoId) return;
+  // Update Supabase record
+  const { error } = await supabase
+    .from('todos')
+    .update({
+      title: editTitle.value,
+      status: editStatus.value,
+      assigned_to: editAssignedTo.value,
+      assigned_avatar: editingAvatarUrl,
+      deadline: editDeadline.value,
+      priority: editPriority.value
+    })
+    .eq('id', editingTodoId);
+  if (error) alert('Edit failed! ' + error.message);
+  closeEditModal();
+  loadTodos();
+});
+
+// ========== SELECT ALL CHECKBOX FOR TODOS ==========
+const selectAllCheckbox = document.getElementById('selectAll');
+if (selectAllCheckbox) {
+  selectAllCheckbox.addEventListener('change', function() {
+    const checkboxes = document.querySelectorAll('#todoTable tbody input[type="checkbox"]');
+    checkboxes.forEach(cb => { cb.checked = selectAllCheckbox.checked; });
+  });
+}
+
+// ========== CONTACTS DYNAMIC LOAD ==========
+async function loadContacts() {
+  const grid = document.querySelector('.contacts-grid');
+  if (!grid) return;
+  grid.innerHTML = '<div style="color:#888;text-align:center;">Loading...</div>';
+  const { data: contacts, error } = await supabase.from('contacts').select('*').order('id', { ascending: true });
+  if (error) {
+    grid.innerHTML = `<div style="color:red;">Error fetching contacts</div>`;
+    return;
+  }
+  if (!contacts || contacts.length === 0) {
+    grid.innerHTML = `<div style="color:#888;">No contacts yet.</div>`;
+    return;
+  }
+  grid.innerHTML = '';
+  contacts.forEach(contact => {
+    grid.innerHTML += `
+      <div class="contact-card">
+        <div class="contact-avatar">
+          <img src="${contact.avatar}" alt="${contact.name}" />
+        </div>
+        <div class="contact-info">
+          <div class="contact-name">${contact.name}</div>
+          <div class="contact-email">${contact.email}</div>
+          <span class="contact-badge ${contact.type && contact.type.toLowerCase()}">${capitalize(contact.type || '')}</span>
+        </div>
+      </div>
+    `;
+  });
+}
