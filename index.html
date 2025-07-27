@@ -1,28 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Silva Admin Dashboard</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <title>Personal-Assistance Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <!-- Sidebar Navigation -->
   <div class="sidebar">
-    <h2>Silva</h2>
+    <h2>Personal-Assistance</h2>
     <ul>
       <li><a href="#" id="dashboardLink" class="active">Dashboard</a></li>
-      <li><a href="#">CRM</a></li>
-      <li><a href="#">Analytics</a></li>
-      <li><a href="#">eCommerce</a></li>
-      <li><a href="#">Authentication</a></li>
-      <li><a href="#">Error Pages</a></li>
-      <li><a href="#">Utility</a></li>
+      <li><a href="#" id="financeLink">Finance</a></li>
       <li><a href="#" id="todoListLink">Todo List</a></li>
-      <li><a href="#">Contacts</a></li>
-      <li><a href="#">Calendar</a></li>
-      <li><a href="#">Components</a></li>
+      <li><a href="#" id="notesLink">Notes</a></li>
     </ul>
   </div>
+
   <!-- Dashboard Section -->
   <div class="main-content" id="dashboardSection">
     <div class="header">
@@ -33,6 +28,7 @@
         <span class="avatar-placeholder"></span>
       </div>
     </div>
+
     <div class="cards">
       <div class="card">
         <div class="card-title">Total Orders</div>
@@ -55,6 +51,7 @@
         <div class="stats">▲ 18% vs last 7 days</div>
       </div>
     </div>
+
     <div class="charts-row">
       <div class="chart">
         <div class="chart-title">Sales Report</div>
@@ -66,15 +63,25 @@
       </div>
     </div>
   </div>
+
+  <!-- Finance Section -->
+  <div class="main-content" id="financeSection" style="display:none;">
+    <h2>Finance</h2>
+    <p style="color:#888;">[Finance module coming soon]</p>
+  </div>
+
   <!-- Todo List Section -->
   <div class="main-content" id="todoSection" style="display:none;">
-    <h2>Todo List</h2>
+    <div class="todo-header-row">
+      <h2>Todo List</h2>
+      <button class="add-task-btn">+ Add Task</button>
+    </div>
     <div class="todo-table-container">
       <table class="todo-table" id="todoTable">
         <thead>
           <tr>
-            <th></th>
-            <th>Title</th>
+            <th><input type="checkbox" id="selectAll" /></th>
+            <th>Task</th>
             <th>Status</th>
             <th>Assigned To</th>
             <th>Deadline</th>
@@ -84,45 +91,79 @@
         </thead>
         <tbody>
           <tr>
-            <td><input type="checkbox"></td>
-            <td>Create A New React app</td>
-            <td><span class="status-label status-InProgress">In Progress</span></td>
+            <td><input type="checkbox" /></td>
             <td>
-              <img class="avatar" src="https://randomuser.me/api/portraits/men/32.jpg" alt="Alexander White">
+              <img
+                class="avatar"
+                src="https://randomuser.me/api/portraits/men/32.jpg"
+                alt="Alexander White"
+              />
+              Create A New React app
+            </td>
+            <td><span class="status-label in-progress">In Progress</span></td>
+            <td>
+              <img
+                class="avatar"
+                src="https://randomuser.me/api/portraits/men/32.jpg"
+                alt="Alexander White"
+              />
               Alexander White
             </td>
             <td>Due in 3 days</td>
-            <td><span class="priority-High">High</span></td>
+            <td><span class="priority-label high">High</span></td>
             <td class="actions">
               <button class="edit" title="Edit">&#9998;</button>
               <button class="delete" title="Delete">&#10005;</button>
             </td>
           </tr>
           <tr>
-            <td><input type="checkbox"></td>
-            <td>Finish project report</td>
-            <td><span class="status-label status-NotStarted">Not Started</span></td>
+            <td><input type="checkbox" /></td>
             <td>
-              <img class="avatar" src="https://randomuser.me/api/portraits/women/1.jpg" alt="Sophia Williams">
+              <img
+                class="avatar"
+                src="https://randomuser.me/api/portraits/women/1.jpg"
+                alt="Sophia Williams"
+              />
+              Finish project report
+            </td>
+            <td><span class="status-label not-started">Not Started</span></td>
+            <td>
+              <img
+                class="avatar"
+                src="https://randomuser.me/api/portraits/women/1.jpg"
+                alt="Sophia Williams"
+              />
               Sophia Williams
             </td>
             <td>15 August 2024</td>
-            <td><span class="priority-Medium">Medium</span></td>
+            <td><span class="priority-label medium">Medium</span></td>
             <td class="actions">
               <button class="edit" title="Edit">&#9998;</button>
               <button class="delete" title="Delete">&#10005;</button>
             </td>
           </tr>
+
           <tr>
-            <td><input type="checkbox"></td>
-            <td>Team meeting preparation</td>
-            <td><span class="status-label status-Completed">Completed</span></td>
+            <td><input type="checkbox" /></td>
             <td>
-              <img class="avatar" src="https://randomuser.me/api/portraits/men/45.jpg" alt="Michael Carter">
+              <img
+                class="avatar"
+                src="https://randomuser.me/api/portraits/men/45.jpg"
+                alt="Michael Carter"
+              />
+              Team meeting preparation
+            </td>
+            <td><span class="status-label completed">Completed</span></td>
+            <td>
+              <img
+                class="avatar"
+                src="https://randomuser.me/api/portraits/men/45.jpg"
+                alt="Michael Carter"
+              />
               Michael Carter
             </td>
             <td>Yesterday</td>
-            <td><span class="priority-Low">Low</span></td>
+            <td><span class="priority-label low">Low</span></td>
             <td class="actions">
               <button class="edit" title="Edit">&#9998;</button>
               <button class="delete" title="Delete">&#10005;</button>
@@ -132,6 +173,95 @@
       </table>
     </div>
   </div>
+
+  <!-- Notes Section -->
+  <div class="main-content" id="notesSection" style="display:none;">
+    <h2>Notes</h2>
+    <p style="color:#888;">[Notes module coming soon]</p>
+  </div>
+  <!-- --------------------------------------------------------------------------add task------------- -->
+   <!-- Add New Task Modal -->
+<div id="addModal" class="modal">
+  <div class="modal-content">
+    <span class="close-btn" id="addModalClose">&times;</span>
+    <h3>Add New Todo Task</h3>
+    <form id="addTodoForm">
+      <label for="addTitle">Title</label>
+      <input type="text" id="addTitle" name="title" required />
+
+      <label for="addStatus">Status</label>
+      <select id="addStatus" name="status">
+        <option value="in-progress">In Progress</option>
+        <option value="not-started">Not Started</option>
+        <option value="completed">Completed</option>
+        <option value="inactive">Inactive</option>
+        <option value="active">Active</option>
+      </select>
+
+      <label for="addAssignedTo">Assigned To</label>
+      <input type="text" id="addAssignedTo" name="assignedTo" required />
+
+      <label for="addAssignedAvatar">Assigned Avatar URL</label>
+      <input type="text" id="addAssignedAvatar" name="assignedAvatar" placeholder="Paste avatar image URL" required />
+
+      <label for="addDeadline">Deadline</label>
+      <input type="text" id="addDeadline" name="deadline" placeholder="e.g. Due in 3 days" required />
+
+      <label for="addPriority">Priority</label>
+      <select id="addPriority" name="priority">
+        <option value="high">High</option>
+        <option value="medium">Medium</option>
+        <option value="low">Low</option>
+      </select>
+
+      <div class="modal-buttons">
+        <button type="submit" class="save-btn">Add</button>
+        <button type="button" class="cancel-btn" id="addModalCancel">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+<!-- ----------------------------------------edit task end---------------------------- -->
+  <!-- Edit Task Modal -->
+<div id="editModal" class="modal">
+  <div class="modal-content">
+    <span class="close-btn" id="editModalClose">&times;</span>
+    <h3>Edit Todo Task</h3>
+    <form id="editTodoForm">
+      <label for="editTitle">Title</label>
+      <input type="text" id="editTitle" name="title" required />
+
+      <label for="editStatus">Status</label>
+      <select id="editStatus" name="status">
+        <option value="in-progress">In Progress</option>
+        <option value="not-started">Not Started</option>
+        <option value="completed">Completed</option>
+        <option value="inactive">Inactive</option>
+        <option value="active">Active</option>
+      </select>
+
+      <label for="editAssignedTo">Assigned To</label>
+      <input type="text" id="editAssignedTo" name="assignedTo" required />
+
+      <label for="editDeadline">Deadline</label>
+      <input type="text" id="editDeadline" name="deadline" placeholder="e.g. Due in 3 days or 15 August 2024" required />
+
+      <label for="editPriority">Priority</label>
+      <select id="editPriority" name="priority">
+        <option value="high">High</option>
+        <option value="medium">Medium</option>
+        <option value="low">Low</option>
+      </select>
+
+      <div class="modal-buttons">
+        <button type="submit" class="save-btn">Save</button>
+        <button type="button" class="cancel-btn" id="editModalCancel">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+  <!-- Link to JS -->
   <script src="script.js"></script>
 </body>
 </html>
