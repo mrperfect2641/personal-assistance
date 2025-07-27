@@ -321,3 +321,23 @@ addTodoForm.addEventListener('submit', function (event) {
   tbody.appendChild(tr);
   closeAddModal();
 });
+
+// Navigation for Contacts section
+const contactsLink = document.getElementById('contactsLink');
+const contactsSection = document.getElementById('contactsSection');
+
+function hideAllSections() {
+  dashboardSection.style.display = 'none';
+  financeSection.style.display = 'none';
+  todoSection.style.display = 'none';
+  notesSection.style.display = 'none';
+  contactsSection.style.display = 'none';
+}
+
+contactsLink.onclick = function(e) {
+  e.preventDefault();
+  hideAllSections();
+  contactsSection.style.display = 'block';
+  clearSidebarActive();
+  contactsLink.classList.add('active');
+};
