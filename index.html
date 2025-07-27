@@ -1,11 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Personal Assistant</title>
+  <meta charset="UTF-8">
+  <title>Personal Assistance</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    
+  <div class="sidebar">
+    <h2>Silva</h2>
+    <ul>
+      <li><a href="#" class="active">Dashboard</a></li>
+      <li><a href="#">CRM</a></li>
+      <li><a href="#">Analytics</a></li>
+      <li><a href="#">eCommerce</a></li>
+      <li><a href="#">Authentication</a></li>
+      <li><a href="#">Error Pages</a></li>
+      <li><a href="#">Utility</a></li>
+      <li><a href="#">Todo List</a></li>
+      <li><a href="#">Contacts</a></li>
+      <li><a href="#">Calendar</a></li>
+      <li><a href="#">Components</a></li>
+    </ul>
+  </div>
+  <div class="main-content">
+    <div class="header">
+      <div class="welcome">Good Morning, John Smith</div>
+      <div class="profile">
+        <span>🔔</span>
+        <span><strong>John Smith</strong></span>
+        <span style="width:30px;height:30px;border-radius:50%;background:#bbb;display:inline-block;"></span>
+      </div>
+    </div>
+    <div class="cards">
+      <div class="card">
+        <div class="card-title">Total Orders</div>
+        <div class="card-value">25,894</div>
+        <div class="stats">▲ 12.5% vs last 7 days</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Monthly Orders</div>
+        <div class="card-value">57,800</div>
+        <div class="stats negative">▼ 1.5% vs last 7 days</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Monthly Revenue</div>
+        <div class="card-value">$637,254</div>
+        <div class="stats">▲ 12.8% vs last 7 days</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Out of Stock</div>
+        <div class="card-value">142 Items</div>
+        <div class="stats">▲ 18% vs last 7 days</div>
+      </div>
+    </div>
+    <div class="charts-row">
+      <div class="chart">
+        <div style="font-weight:600;">Sales Report</div>
+        <!-- Insert chart library or SVG/chart.js later -->
+        <div style="height:160px;display:flex;align-items:center;justify-content:center;color:#bbb;">[Sales Chart Here]</div>
+      </div>
+      <div class="chart">
+        <div style="font-weight:600;">Sales by Country</div>
+        <!-- Insert chart here -->
+        <div style="height:160px;display:flex;align-items:center;justify-content:center;color:#bbb;">[Radar Chart Here]</div>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
