@@ -582,3 +582,19 @@ body {
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   }
 }
+
+.add-contact-btn {
+  background: #5A8DEE;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 20px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-weight: 600;
+  user-select: none;
+}
+.add-contact-btn:hover {
+  background: #3756b5;
+}

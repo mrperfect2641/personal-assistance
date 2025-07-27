@@ -147,22 +147,33 @@ window.addEventListener('click', (event) => { if (event.target === addModal) clo
 
 addTodoForm.addEventListener('submit', async function (event) {
   event.preventDefault();
+
   const title = document.getElementById('addTitle').value;
   const statusValue = document.getElementById('addStatus').value;
   const assignedTo = document.getElementById('addAssignedTo').value;
-  const assignedAvatar = document.getElementById('addAssignedAvatar').value;
+  const assignedAvatar = document.getElementById('addAssignedAvatar').value; // New field value
   const deadline = document.getElementById('addDeadline').value;
   const priorityValue = document.getElementById('addPriority').value;
-  // Insert into supabase
+
+  // Insert into Supabase
   const { error } = await supabase.from('todos').insert([{
-    title, status: statusValue, assigned_to: assignedTo,
-    assigned_avatar: assignedAvatar, deadline,
+    title,
+    status: statusValue,
+    assigned_to: assignedTo,
+    assigned_avatar: assignedAvatar,
+    deadline,
     priority: priorityValue
   }]);
-  if (error) alert('Add failed! ' + error.message);
+
+  if (error) {
+    alert('Add failed! ' + error.message);
+    return;
+  }
+
   closeAddModal();
   loadTodos();
 });
+
 
 // ----- EDIT TASK -----
 const editModal = document.getElementById('editModal');
@@ -300,3 +311,4 @@ async function loadContacts() {
     `;
   });
 }
+

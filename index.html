@@ -4,8 +4,10 @@
   <meta charset="UTF-8" />
   <title>Personal-Assistance Dashboard</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
   <!-- CSS -->
   <link rel="stylesheet" href="style.css" />
+  
   <!-- Supabase JS SDK -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js/dist/umd/supabase.min.js"></script>
 </head>
@@ -69,10 +71,12 @@
     </div>
   </div>
 
-  <!-- Finance Section (placeholder) -->
+  <!-- Finance Section (Placeholder) -->
   <div class="main-content" id="financeSection" style="display:none;">
-    <h2>Finance</h2>
-    <p style="color:#888;">[Finance module coming soon]</p>
+    <div class="header">
+      <div class="welcome">Finance</div>
+    </div>
+    <p style="color:#888; padding-top: 20px;">[Finance module coming soon]</p>
   </div>
 
   <!-- Todo List Section -->
@@ -95,28 +99,29 @@
           </tr>
         </thead>
         <tbody>
-          <!-- Todo items will load here dynamically -->
+          <!-- Todo items loaded dynamically -->
         </tbody>
       </table>
     </div>
   </div>
 
-  <!-- Contacts Section -->
-  <div class="main-content" id="contactsSection" style="display:none;">
-    <div class="header sticky-header">
-      <div class="welcome">Contacts</div>
-    </div>
-    <div class="contacts-grid">
-      <!-- Contact cards injected dynamically -->
-    </div>
-  </div>
-
-  <!-- Notes Section (placeholder) -->
+  <!-- Notes Section (Placeholder) -->
   <div class="main-content" id="notesSection" style="display:none;">
     <div class="header sticky-header">
       <div class="welcome">Notes</div>
     </div>
-    <p style="color:#888;">[Notes module coming soon]</p>
+    <p style="color:#888; padding-top: 20px;">[Notes module coming soon]</p>
+  </div>
+
+  <!-- Contacts Section -->
+  <div class="main-content" id="contactsSection" style="display:none;">
+    <div class="header sticky-header" style="justify-content: space-between;">
+      <div class="welcome">Contacts</div>
+      <button class="add-contact-btn">+ Add Contact</button>
+    </div>
+    <div class="contacts-grid">
+      <!-- Contact cards injected dynamically -->
+    </div>
   </div>
 
   <!-- Add New Task Modal -->
@@ -200,6 +205,35 @@
     </div>
   </div>
 
+  <!-- Add New Contact Modal -->
+  <div id="addContactModal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" id="addContactModalClose">&times;</span>
+      <h3>Add New Contact</h3>
+      <form id="addContactForm">
+        <label for="contactName">Name</label>
+        <input type="text" id="contactName" name="name" required />
+
+        <label for="contactEmail">Email</label>
+        <input type="email" id="contactEmail" name="email" required />
+
+        <label for="contactAvatar">Avatar URL</label>
+        <input type="text" id="contactAvatar" name="avatar" placeholder="Paste avatar image URL" required />
+
+        <label for="contactType">Type</label>
+        <select id="contactType" name="type" required>
+          <option value="">Select type</option>
+          <option value="Lead">Lead</option>
+          <option value="Customer">Customer</option>
+        </select>
+
+        <div class="modal-buttons">
+          <button type="submit" class="save-btn">Add</button>
+          <button type="button" class="cancel-btn" id="addContactModalCancel">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
   <!-- Your main script -->
   <script src="script.js"></script>
   <script>
