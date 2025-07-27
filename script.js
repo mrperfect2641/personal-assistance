@@ -1,11 +1,10 @@
 // ========== SUPABASE INITIALIZATION ==========
-// Insert your actual project API values!
+// Replace these with your actual Supabase project credentials
 const SUPABASE_URL = 'https://teafrrntffzraoiuurie.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRlYWZycm50ZmZ6cmFvaXV1cmllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM1OTMwMzgsImV4cCI6MjA2OTE2OTAzOH0.EZ7Lkxo_H1lZMMMH9OmjqKm3ALcIRripTzYrz7FosZs';
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // ========== SIDEBAR NAVIGATION ==========
-
 const dashboardLink = document.getElementById('dashboardLink');
 const financeLink = document.getElementById('financeLink');
 const todoLink = document.getElementById('todoListLink');
@@ -20,6 +19,9 @@ const contactsSection = document.getElementById('contactsSection');
 
 const sidebarLinks = document.querySelectorAll('.sidebar ul li a');
 
+/**
+ * Hide all main content sections
+ */
 function hideAllSections() {
   dashboardSection.style.display = 'none';
   financeSection.style.display = 'none';
@@ -27,6 +29,10 @@ function hideAllSections() {
   notesSection.style.display = 'none';
   contactsSection.style.display = 'none';
 }
+
+/**
+ * Remove 'active' classes from all sidebar links
+ */
 function clearSidebarActive() {
   sidebarLinks.forEach(link => link.classList.remove('active'));
 }
@@ -38,6 +44,7 @@ dashboardLink.onclick = function(e) {
   clearSidebarActive();
   dashboardLink.classList.add('active');
 };
+
 financeLink.onclick = function(e) {
   e.preventDefault();
   hideAllSections();
@@ -45,15 +52,16 @@ financeLink.onclick = function(e) {
   clearSidebarActive();
   financeLink.classList.add('active');
 };
+
 todoLink.onclick = function(e) {
   e.preventDefault();
   hideAllSections();
   todoSection.style.display = 'block';
   clearSidebarActive();
   todoLink.classList.add('active');
-  // Load latest todos when shown
-  loadTodos();
+  loadTodos(); // Load todos when showing todo section
 };
+
 notesLink.onclick = function(e) {
   e.preventDefault();
   hideAllSections();
@@ -61,14 +69,14 @@ notesLink.onclick = function(e) {
   clearSidebarActive();
   notesLink.classList.add('active');
 };
+
 contactsLink.onclick = function(e) {
   e.preventDefault();
   hideAllSections();
   contactsSection.style.display = 'block';
   clearSidebarActive();
   contactsLink.classList.add('active');
-  // Load latest contacts when shown
-  loadContacts();
+  loadContacts(); // Load contacts when showing contacts section
 };
 
 window.onload = function() {
@@ -76,18 +84,23 @@ window.onload = function() {
   dashboardSection.style.display = 'block';
   clearSidebarActive();
   dashboardLink.classList.add('active');
-  // Optionally auto-load todos and contacts for first view
   loadTodos();
   loadContacts();
 };
 
-// ========== TODO LIST CRUD ==========
+// ====== Helpers for formatting =======
+function formatStatus(str) {
+  return str.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+}
+function capitalize(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
 
-// Helpers: for status/prio formatting
-function formatStatus(str) { return str.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()); }
-function capitalize(str) { return str.slice(0,1).toUpperCase() + str.slice(1); }
+// ========== TODO LIST ==========
 
-// ----- LOAD & RENDER TODOS -----
+/**
+ * Fetch and render todo items from Supabase
+ */
 async function loadTodos() {
   const tbody = document.querySelector('#todoTable tbody');
   if (!tbody) return;
@@ -127,7 +140,7 @@ async function loadTodos() {
   });
 }
 
-// ----- ADD NEW TASK -----
+// --- Add Task Modal Handling ---
 const addModal = document.getElementById('addModal');
 const addModalClose = document.getElementById('addModalClose');
 const addModalCancel = document.getElementById('addModalCancel');
@@ -141,41 +154,30 @@ if (addTaskBtn) {
   });
 }
 function closeAddModal() { addModal.style.display = 'none'; }
-addModalClose && addModalClose.addEventListener('click', closeAddModal);
-addModalCancel && addModalCancel.addEventListener('click', closeAddModal);
+addModalClose?.addEventListener('click', closeAddModal);
+addModalCancel?.addEventListener('click', closeAddModal);
 window.addEventListener('click', (event) => { if (event.target === addModal) closeAddModal(); });
 
 addTodoForm.addEventListener('submit', async function (event) {
   event.preventDefault();
-
   const title = document.getElementById('addTitle').value;
   const statusValue = document.getElementById('addStatus').value;
   const assignedTo = document.getElementById('addAssignedTo').value;
-  const assignedAvatar = document.getElementById('addAssignedAvatar').value; // New field value
+  const assignedAvatar = document.getElementById('addAssignedAvatar').value;
   const deadline = document.getElementById('addDeadline').value;
   const priorityValue = document.getElementById('addPriority').value;
-
-  // Insert into Supabase
   const { error } = await supabase.from('todos').insert([{
-    title,
-    status: statusValue,
-    assigned_to: assignedTo,
-    assigned_avatar: assignedAvatar,
-    deadline,
-    priority: priorityValue
+    title, status: statusValue, assigned_to: assignedTo,
+    assigned_avatar: assignedAvatar, deadline, priority: priorityValue
   }]);
-
-  if (error) {
-    alert('Add failed! ' + error.message);
-    return;
+  if (error) alert('Add failed! ' + error.message);
+  else {
+    closeAddModal();
+    loadTodos();
   }
-
-  closeAddModal();
-  loadTodos();
 });
 
-
-// ----- EDIT TASK -----
+// --- Edit Task Modal Handling ---
 const editModal = document.getElementById('editModal');
 const editModalClose = document.getElementById('editModalClose');
 const editModalCancel = document.getElementById('editModalCancel');
@@ -183,25 +185,25 @@ const editTodoForm = document.getElementById('editTodoForm');
 const editTitle = document.getElementById('editTitle');
 const editStatus = document.getElementById('editStatus');
 const editAssignedTo = document.getElementById('editAssignedTo');
+const editAssignedAvatar = document.getElementById('editAssignedAvatar');
 const editDeadline = document.getElementById('editDeadline');
 const editPriority = document.getElementById('editPriority');
 let editingTodoId = null;
-let editingAvatarUrl = '';
 
 document.addEventListener('click', function(event) {
-  // Open edit modal on edit button click
   const editBtn = event.target.closest('.actions .edit');
   if (editBtn) {
-    // Grab row data
     const row = editBtn.closest('tr');
     editingTodoId = editBtn.dataset.id;
-    // Title (after avatar)
+
+    // Title
     let titleText = '';
     const titleTd = row.cells[1];
     for (const node of titleTd.childNodes) {
       if (node.nodeType === Node.TEXT_NODE) titleText += node.textContent.trim();
     }
     editTitle.value = titleText;
+
     // Status
     const statusSpan = row.cells[2].querySelector('span.status-label');
     let statusClass = 'not-started';
@@ -210,6 +212,7 @@ document.addEventListener('click', function(event) {
       statusClass = classes.find(c => c !== 'status-label') || statusSpan.textContent.toLowerCase().replace(/\s+/g, '-');
     }
     editStatus.value = statusClass;
+
     // Assigned To
     let assignedText = '';
     const assignedTd = row.cells[3];
@@ -217,11 +220,14 @@ document.addEventListener('click', function(event) {
       if (node.nodeType === Node.TEXT_NODE) assignedText += node.textContent.trim();
     }
     editAssignedTo.value = assignedText;
-    // Extract assigned avatar
+
+    // Assigned Avatar Src
     const avatarAssigned = assignedTd.querySelector('img');
-    editingAvatarUrl = avatarAssigned ? avatarAssigned.src : '';
+    editAssignedAvatar.value = avatarAssigned ? avatarAssigned.src : '';
+
     // Deadline
     editDeadline.value = row.cells[4].textContent.trim();
+
     // Priority
     const prioritySpan = row.cells[5].querySelector('span.priority-label');
     let priorityClass = 'medium';
@@ -230,49 +236,57 @@ document.addEventListener('click', function(event) {
       priorityClass = pClasses.find(c => ['high','medium','low'].includes(c)) || 'medium';
     }
     editPriority.value = priorityClass;
-    // Show modal
+
     editModal.style.display = 'block';
   }
-  // Delete action
+
+  // --- Delete functionality (fixed await here) ---
   const deleteBtn = event.target.closest('.actions .delete');
   if (deleteBtn) {
-    const todoId = deleteBtn.dataset.id;
-    if (confirm('Delete this task?')) {
-      supabase.from('todos').delete().eq('id', todoId).then(() => loadTodos());
-    }
+    (async () => {
+      const todoId = deleteBtn.dataset.id;
+      if (confirm('Delete this task?')) {
+        try {
+          const { error } = await supabase.from('todos').delete().eq('id', todoId);
+          if (error) alert('Delete failed: ' + error.message);
+          else loadTodos();
+        } catch (err) {
+          alert('Error deleting: ' + err.message);
+        }
+      }
+    })();
   }
 });
 
 function closeEditModal() {
-  editModal.style.display = 'none';
   editingTodoId = null;
-  editingAvatarUrl = '';
+  editModal.style.display = 'none';
 }
-editModalClose && editModalClose.addEventListener('click', closeEditModal);
-editModalCancel && editModalCancel.addEventListener('click', closeEditModal);
+editModalClose?.addEventListener('click', closeEditModal);
+editModalCancel?.addEventListener('click', closeEditModal);
 window.addEventListener('click', (event) => { if (event.target === editModal) closeEditModal(); });
 
-editTodoForm.addEventListener('submit', async function(event) {
+editTodoForm.addEventListener('submit', async function(event){
   event.preventDefault();
-  if (!editingTodoId) return;
-  // Update Supabase record
-  const { error } = await supabase
-    .from('todos')
-    .update({
-      title: editTitle.value,
-      status: editStatus.value,
-      assigned_to: editAssignedTo.value,
-      assigned_avatar: editingAvatarUrl,
-      deadline: editDeadline.value,
-      priority: editPriority.value
-    })
-    .eq('id', editingTodoId);
+  if(!editingTodoId) return;
+
+  const { error } = await supabase.from('todos').update({
+    title: editTitle.value,
+    status: editStatus.value,
+    assigned_to: editAssignedTo.value,
+    assigned_avatar: editAssignedAvatar.value,
+    deadline: editDeadline.value,
+    priority: editPriority.value
+  }).eq('id', editingTodoId);
+
   if (error) alert('Edit failed! ' + error.message);
-  closeEditModal();
-  loadTodos();
+  else {
+    closeEditModal();
+    loadTodos();
+  }
 });
 
-// ========== SELECT ALL CHECKBOX FOR TODOS ==========
+// ========== Todo List Select All ==========
 const selectAllCheckbox = document.getElementById('selectAll');
 if (selectAllCheckbox) {
   selectAllCheckbox.addEventListener('change', function() {
@@ -281,7 +295,7 @@ if (selectAllCheckbox) {
   });
 }
 
-// ========== CONTACTS DYNAMIC LOAD ==========
+// ========== CONTACTS ==========
 async function loadContacts() {
   const grid = document.querySelector('.contacts-grid');
   if (!grid) return;
@@ -312,3 +326,48 @@ async function loadContacts() {
   });
 }
 
+// ========== ADD CONTACT MODAL & LOGIC ==========
+const addContactBtn = document.querySelector('.add-contact-btn');
+const addContactModal = document.getElementById('addContactModal');
+const addContactModalClose = document.getElementById('addContactModalClose');
+const addContactModalCancel = document.getElementById('addContactModalCancel');
+const addContactForm = document.getElementById('addContactForm');
+
+if (addContactBtn) {
+  addContactBtn.addEventListener('click', () => {
+    addContactModal.style.display = 'block';
+    addContactForm.reset();
+  });
+}
+
+const closeAddContactModal = () => {
+  addContactModal.style.display = 'none';
+};
+
+addContactModalClose?.addEventListener('click', closeAddContactModal);
+addContactModalCancel?.addEventListener('click', closeAddContactModal);
+window.addEventListener('click', (event) => {
+  if (event.target === addContactModal) closeAddContactModal();
+});
+
+addContactForm.addEventListener('submit', async (event) => {
+  event.preventDefault();
+
+  const name = document.getElementById('contactName').value.trim();
+  const email = document.getElementById('contactEmail').value.trim();
+  const avatar = document.getElementById('contactAvatar').value.trim();
+  const type = document.getElementById('contactType').value;
+
+  if (!name || !email || !avatar || !type) {
+    alert('Please fill in all fields.');
+    return;
+  }
+
+  const { error } = await supabase.from('contacts').insert([{ name, email, avatar, type }]);
+
+  if (error) alert('Failed to add contact: ' + error.message);
+  else {
+    closeAddContactModal();
+    loadContacts();
+  }
+});

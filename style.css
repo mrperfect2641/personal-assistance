@@ -208,7 +208,7 @@ body {
   align-items: center;
   margin-bottom: 16px;
 }
-.add-task-btn {
+.add-task-btn, .add-contact-btn {
   background: #5A8DEE;
   color: #fff;
   border: none;
@@ -220,7 +220,7 @@ body {
   font-weight: 600;
   user-select: none;
 }
-.add-task-btn:hover {
+.add-task-btn:hover, .add-contact-btn:hover {
   background: #3756b5;
 }
 
@@ -491,6 +491,7 @@ body {
   user-select: text;
 }
 .modal-content input[type="text"], 
+.modal-content input[type="email"],
 .modal-content select {
   width: 100%;
   padding: 8px 10px;
@@ -502,6 +503,7 @@ body {
   user-select: text;
 }
 .modal-content input[type="text"]:focus,
+.modal-content input[type="email"]:focus,
 .modal-content select:focus {
   border-color: #5A8DEE;
   outline: none;
@@ -581,20 +583,4 @@ body {
   .contacts-grid {
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   }
-}
-
-.add-contact-btn {
-  background: #5A8DEE;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  padding: 8px 20px;
-  font-size: 1em;
-  cursor: pointer;
-  transition: background 0.2s;
-  font-weight: 600;
-  user-select: none;
-}
-.add-contact-btn:hover {
-  background: #3756b5;
 }

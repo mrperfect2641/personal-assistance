@@ -4,10 +4,10 @@
   <meta charset="UTF-8" />
   <title>Personal-Assistance Dashboard</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
+
   <!-- CSS -->
   <link rel="stylesheet" href="style.css" />
-  
+
   <!-- Supabase JS SDK -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js/dist/umd/supabase.min.js"></script>
 </head>
@@ -71,7 +71,7 @@
     </div>
   </div>
 
-  <!-- Finance Section (Placeholder) -->
+  <!-- Finance Section -->
   <div class="main-content" id="financeSection" style="display:none;">
     <div class="header">
       <div class="welcome">Finance</div>
@@ -105,7 +105,7 @@
     </div>
   </div>
 
-  <!-- Notes Section (Placeholder) -->
+  <!-- Notes Section -->
   <div class="main-content" id="notesSection" style="display:none;">
     <div class="header sticky-header">
       <div class="welcome">Notes</div>
@@ -145,7 +145,7 @@
         <label for="addAssignedTo">Assigned To</label>
         <input type="text" id="addAssignedTo" name="assignedTo" required />
 
-        <label for="addAssignedAvatar">Assigned Avatar URL</label>
+        <label for="addAssignedAvatar">Profile Avatar URL</label>
         <input type="text" id="addAssignedAvatar" name="assignedAvatar" placeholder="Paste avatar image URL" required />
 
         <label for="addDeadline">Deadline</label>
@@ -186,6 +186,9 @@
 
         <label for="editAssignedTo">Assigned To</label>
         <input type="text" id="editAssignedTo" name="assignedTo" required />
+
+        <label for="editAssignedAvatar">Profile Avatar URL</label>
+        <input type="text" id="editAssignedAvatar" name="assignedAvatar" placeholder="Paste avatar image URL" required />
 
         <label for="editDeadline">Deadline</label>
         <input type="text" id="editDeadline" name="deadline" placeholder="e.g. Due in 3 days or 15 August 2024" required />
@@ -234,23 +237,22 @@
       </form>
     </div>
   </div>
-  <!-- Your main script -->
+
+  <!-- Main JavaScript file -->
   <script src="script.js"></script>
+
   <script>
-    // Initialize Supabase client with your project's URL and public anon key
-    // Replace these placeholders with your actual Supabase project credentials
+    // Initialize Supabase client — replace below values with your project credentials
     const SUPABASE_URL = 'https://teafrrntffzraoiuurie.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRlYWZycm50ZmZ6cmFvaXV1cmllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM1OTMwMzgsImV4cCI6MjA2OTE2OTAzOH0.EZ7Lkxo_H1lZMMMH9OmjqKm3ALcIRripTzYrz7FosZs';
-
-    // Expose supabase client globally for your script.js
     window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    // You may want to immediately load data here or in your script.js logic
-    // Example calls after DOM is loaded:
-    document.addEventListener('DOMContentLoaded', function () {
+    // Load initial data — you can also trigger these in script.js navigation handlers
+    document.addEventListener('DOMContentLoaded', () => {
       if (typeof loadTodos === 'function') loadTodos();
       if (typeof loadContacts === 'function') loadContacts();
     });
   </script>
+
 </body>
 </html>
