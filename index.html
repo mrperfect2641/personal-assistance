@@ -151,7 +151,7 @@
   </div>
 
   <!-- Add New Task Modal -->
-  <div id="addModal" class="modal">
+  <!-- <div id="addModal" class="modal">
     <div class="modal-content">
       <span class="close-btn" id="addModalClose">&times;</span>
       <h3>Add New Todo Task</h3>
@@ -190,7 +190,68 @@
         </div>
       </form>
     </div>
+  </div> -->
+  <div id="addModal" class="modal">
+  <div class="modal-content">
+    <span class="close-btn" id="addModalClose">&times;</span>
+    <h3>Add New Todo Task</h3>
+    <form id="addTodoForm">
+      <!-- First Row: Title (full width) -->
+      <div class="todo-form-row">
+        <div class="todo-form-col" style="flex:1;">
+          <label for="addTitle">Title</label>
+          <input type="text" id="addTitle" name="title" required />
+        </div>
+      </div>
+      <!-- Second Row: Status and Assigned To -->
+      <div class="todo-form-row">
+        <div class="todo-form-col">
+          <label for="addStatus">Status</label>
+          <select id="addStatus" name="status">
+            <option value="in-progress">In Progress</option>
+            <option value="not-started">Not Started</option>
+            <option value="completed">Completed</option>
+            <option value="inactive">Inactive</option>
+            <option value="active">Active</option>
+          </select>
+        </div>
+        <div class="todo-form-col">
+          <label for="addAssignedTo">Assigned To</label>
+          <input type="text" id="addAssignedTo" name="assignedTo" required />
+        </div>
+      </div>
+      <!-- Third Row: Avatar & Deadline -->
+      <div class="todo-form-row">
+        <div class="todo-form-col">
+          <label for="addAssignedAvatar">Profile Avatar URL</label>
+          <input type="text" id="addAssignedAvatar" name="assignedAvatar" required />
+        </div>
+        <div class="todo-form-col">
+          <label for="addDeadline">Deadline</label>
+          <input type="text" id="addDeadline" name="deadline" required />
+        </div>
+      </div>
+      <!-- Fourth Row: Priority alone (leave extra space for symmetry) -->
+      <div class="todo-form-row">
+        <div class="todo-form-col" style="flex: 0 0 48%;">
+          <label for="addPriority">Priority</label>
+          <select id="addPriority" name="priority">
+            <option value="high">High</option>
+            <option value="medium">Medium</option>
+            <option value="low">Low</option>
+          </select>
+        </div>
+        <div class="todo-form-col" style="flex: 0 0 48%;"></div>
+      </div>
+      <!-- Buttons Row -->
+      <div class="todo-form-row todo-form-buttons">
+        <button type="submit" class="save-btn">Add</button>
+        <button type="button" class="cancel-btn" id="addModalCancel">Cancel</button>
+      </div>
+    </form>
   </div>
+</div>
+
 
   <!-- Edit Task Modal -->
   <div id="editModal" class="modal">

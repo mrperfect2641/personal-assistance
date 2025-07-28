@@ -90,7 +90,7 @@ body {
   top: 0;
   background: #f7fafc; /* Match main content background */
   padding-top: 20px;   /* Vertical padding */
-  padding-bottom: 12px;
+  padding-bottom: 20px;
   z-index: 10;         /* Appear above scrolling content */
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07); /* subtle shadow for separation */
   display: flex;
@@ -100,9 +100,9 @@ body {
 
 /* Welcome Text Styling */
 .header .welcome {
+  margin: 0 0 0 1.5vw;
   font-weight: 600;
   font-size: 1.2em;
-  margin: 0; /* Already spaced with header padding */
   user-select: none;
 }
 
@@ -209,6 +209,7 @@ body {
   margin-bottom: 16px;
 }
 .add-task-btn, .add-contact-btn, .add-transaction-btn {
+  margin-right: 2vw;
   background: #5A8DEE;
   color: #fff;
   border: none;
@@ -633,6 +634,7 @@ body {
   transition: border-color 0.25s;
   margin-bottom: 2px;
   user-select: text;
+  width: 95%;
 }
 .modal-content input[type="number"]::-webkit-outer-spin-button,
 .modal-content input[type="number"]::-webkit-inner-spin-button {
@@ -733,3 +735,98 @@ body {
     gap: 24px;
   }
 }
+
+/* LANDSCAPE/ROW-BASED FORM LAYOUT FOR THE TODO MODAL */
+#addModal .modal-content {
+  max-width: 700px;
+  width: 96%;
+}
+
+#addTodoForm {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.todo-form-row {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 24px;
+  margin-bottom: 3px;
+}
+
+.todo-form-col {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.todo-form-col label {
+  font-weight: 600;
+  font-size: 1rem;
+  margin-bottom: 4px;
+  color: #334155;
+}
+
+.todo-form-col input,
+.todo-form-col select {
+  font-size: 1rem;
+  padding: 11px 13px;
+  border-radius: 7px;
+  border: 1.7px solid #d1d5db;
+  background-color: #f9fafb;
+  color: #1f2937;
+  outline: none;
+  min-width: 0;
+  transition: border-color 0.22s;
+}
+
+.todo-form-col input:focus,
+.todo-form-col select:focus {
+  border-color: #5A8DEE;
+  background: #e8f0fe;
+}
+
+.todo-form-row:last-child {
+  margin-bottom: 0;
+}
+
+/* Button row: side by side, big & full width */
+.todo-form-buttons {
+  justify-content: flex-end;
+  gap: 16px;
+  margin-top: 18px;
+}
+
+.save-btn, .cancel-btn {
+  flex: 1 1 140px;
+  padding: 14px 0;
+  border-radius: 9px;
+  font-weight: 700;
+  font-size: 1.08rem;
+  border: none;
+  letter-spacing: 0.07em;
+  cursor: pointer;
+  transition: background 0.16s;
+}
+
+.save-btn {
+  background: linear-gradient(90deg,#5A8DEE 75%,#4299e1 120%);
+  color: #fff;
+}
+
+.save-btn:hover { background: #3756b5; }
+
+.cancel-btn {
+  background: #f3f4f6;
+  color: #444a5a;
+}
+
+.cancel-btn:hover { background: #e2e8f0; }
+
+@media (max-width: 700px) {
+  #addModal .modal-content { max-width: 98vw; padding: 22px 6vw; }
+  .todo-form-row { flex-direction: column; gap: 11px; }
+}
+
