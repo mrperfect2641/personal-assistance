@@ -208,7 +208,7 @@ body {
   align-items: center;
   margin-bottom: 16px;
 }
-.add-task-btn, .add-contact-btn {
+.add-task-btn, .add-contact-btn, .add-transaction-btn {
   background: #5A8DEE;
   color: #fff;
   border: none;
@@ -220,7 +220,7 @@ body {
   font-weight: 600;
   user-select: none;
 }
-.add-task-btn:hover, .add-contact-btn:hover {
+.add-task-btn:hover, .add-contact-btn:hover, .add-transaction-btn:hover {
   background: #3756b5;
 }
 
@@ -356,7 +356,7 @@ body {
 .todo-table input[type="checkbox"] {
   width: 18px;
   height: 18px;
-  accent-color: #5A8DEE; /* Modern browsers */
+  accent-color: #5A8DEE;
   vertical-align: middle;
 }
 
@@ -438,7 +438,135 @@ body {
 }
 
 /* ================================== */
-/* Modal Window Styles (Add/Edit) */
+/* Finance Section Styles */
+/* ================================== */
+.finance-grid {
+  display: grid;
+  grid-template-columns: 330px 1fr;
+  gap: 32px;
+  margin-top: 16px;
+}
+
+@media (max-width: 1050px) {
+  .finance-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+}
+
+.expense-categories-panel {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 3px 16px rgba(60, 60, 100, 0.07);
+  padding: 25px 24px 20px 24px;
+  text-align: center;
+  min-width: 0;
+}
+
+.panel-title {
+  font-weight: 700;
+  color: #232346;
+  text-align: left;
+  font-size: 1.18em;
+  margin-bottom: 17px;
+}
+
+#expenseChart {
+  display: block;
+  margin: 0 auto 9px auto;
+  background: #f8f9fd;
+  border-radius: 7px;
+  max-width: 220px;
+}
+
+.legend-list {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  font-size: 0.97em;
+  color: #45465a;
+  gap: 7px;
+}
+
+.legend-dot {
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.transactions-panel {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 3px 16px rgba(60, 60, 100, 0.07);
+  padding: 21px 15px;
+  min-width: 0;
+  overflow-x: auto;
+}
+
+.transactions-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 1em;
+}
+
+.transactions-table th,
+.transactions-table td {
+  text-align: left;
+  padding: 11px 10px;
+}
+
+.transactions-table th {
+  color: #727294;
+  font-weight: 700;
+  background: #f0f2f6;
+  border-bottom: 2px solid #e6e8f1;
+  font-size: 0.97em;
+  user-select: none;
+}
+
+.transactions-table td {
+  border-bottom: 1px solid #f1f2f5;
+  vertical-align: middle;
+}
+
+.transactions-table tr:last-child td {
+  border-bottom: none;
+}
+
+.transactions-table .actions button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin: 0 4px;
+  padding: 4px 7px;
+  border-radius: 4px;
+  font-size: 1.11em;
+  transition: background 0.16s;
+}
+
+.transactions-table .actions .edit {
+  color: #2196f3;
+}
+.transactions-table .actions .edit:hover {
+  background: #e4edfd;
+}
+.transactions-table .actions .delete {
+  color: #e04141;
+}
+.transactions-table .actions .delete:hover {
+  background: #ffeaea;
+}
+
+/* ================================== */
+/* Modal Window Styles (Add/Edit General) */
 /* ================================== */
 
 .modal {
@@ -484,36 +612,49 @@ body {
 /* Form Labels and Inputs */
 .modal-content label {
   display: block;
-  font-size: 0.95em;
+  font-size: 1em;
   margin-bottom: 4px;
   font-weight: 600;
-  color: #555;
+  color: #344767;
+  letter-spacing: 0.01em;
   user-select: text;
 }
-.modal-content input[type="text"], 
-.modal-content input[type="email"],
+.modal-content input[type="text"],
+.modal-content input[type="email"], 
+.modal-content input[type="number"],
 .modal-content select {
-  width: 100%;
-  padding: 8px 10px;
-  margin-bottom: 18px;
-  border: 1.5px solid #ddd;
-  border-radius: 6px;
+  background: #f7fafc;
   font-size: 1em;
-  transition: border-color 0.3s;
+  border: 1.5px solid #dde2ec;
+  border-radius: 7px;
+  padding: 9px 12px;
+  color: #22223b;
+  outline: none;
+  transition: border-color 0.25s;
+  margin-bottom: 2px;
   user-select: text;
 }
-.modal-content input[type="text"]:focus,
-.modal-content input[type="email"]:focus,
-.modal-content select:focus {
-  border-color: #5A8DEE;
-  outline: none;
+.modal-content input[type="number"]::-webkit-outer-spin-button,
+.modal-content input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.modal-content input[type="number"] {
+  -moz-appearance: textfield;
 }
 
-/* Modal Buttons Container */
+.modal-content input:focus,
+.modal-content select:focus {
+  border-color: #5A8DEE;
+  background: #f3f4fb;
+}
+
+/* Button container for forms */
 .modal-buttons {
   display: flex;
   justify-content: flex-end;
-  gap: 12px;
+  margin-top: 7px;
+  gap: 13px;
 }
 
 /* Save/Add Button */
@@ -521,14 +662,16 @@ body {
   background-color: #5A8DEE;
   color: white;
   border: none;
-  padding: 10px 22px;
+  padding: 10px 28px;
   border-radius: 7px;
+  font-size: 1.10em;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background 0.23s;
+  letter-spacing: 0.02em;
   user-select: none;
 }
-.save-btn:hover {
+.save-btn:hover, .save-btn:focus {
   background-color: #3756b5;
 }
 
@@ -537,15 +680,16 @@ body {
   background-color: #eee;
   color: #555;
   border: none;
-  padding: 10px 22px;
+  padding: 10px 28px;
   border-radius: 7px;
+  font-size: 1.10em;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background 0.23s;
   user-select: none;
 }
-.cancel-btn:hover {
-  background-color: #ddd;
+.cancel-btn:hover, .cancel-btn:focus {
+  background: #ddd;
 }
 
 /* ================================== */
@@ -582,5 +726,10 @@ body {
   /* contact card grid columns */
   .contacts-grid {
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+  /* finance grid stacking */
+  .finance-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
   }
 }

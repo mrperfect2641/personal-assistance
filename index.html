@@ -8,6 +8,9 @@
   <!-- CSS -->
   <link rel="stylesheet" href="style.css" />
 
+  <!-- Chart.js for charts -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
   <!-- Supabase JS SDK -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js/dist/umd/supabase.min.js"></script>
 </head>
@@ -35,7 +38,6 @@
         <span class="avatar-placeholder"></span>
       </div>
     </div>
-
     <div class="cards">
       <div class="card">
         <div class="card-title">Total Orders</div>
@@ -58,7 +60,6 @@
         <div class="stats">▲ 18% vs last 7 days</div>
       </div>
     </div>
-
     <div class="charts-row">
       <div class="chart">
         <div class="chart-title">Sales Report</div>
@@ -73,10 +74,35 @@
 
   <!-- Finance Section -->
   <div class="main-content" id="financeSection" style="display:none;">
-    <div class="header">
-      <div class="welcome">Finance</div>
+    <div class="header sticky-header" style="justify-content: space-between;">
+      <div class="welcome">Personal Finance</div>
+      <button class="add-transaction-btn">+ Add Transaction</button>
     </div>
-    <p style="color:#888; padding-top: 20px;">[Finance module coming soon]</p>
+    <div class="finance-grid">
+      <div class="expense-categories-panel">
+        <h3 class="panel-title">Expense Categories</h3>
+        <canvas id="expenseChart" width="270" height="220"></canvas>
+        <div class="legend-list" id="expenseLegend"></div>
+      </div>
+      <div class="transactions-panel">
+        <h3 class="panel-title">Recent Transactions</h3>
+        <table class="transactions-table" id="transactionsTable">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Description</th>
+              <th>Category</th>
+              <th>Type</th>
+              <th>Amount</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Transactions load here dynamically -->
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 
   <!-- Todo List Section -->
@@ -238,21 +264,95 @@
     </div>
   </div>
 
-  <!-- Main JavaScript file -->
+  <!-- Add Transaction Modal -->
+  <div id="addTransactionModal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" id="addTransactionModalClose">&times;</span>
+      <h3>Add New Transaction</h3>
+      <form id="addTransactionForm">
+        <label for="transactionAmount">Amount</label>
+        <input type="number" min="0.01" step="0.01" id="transactionAmount" name="amount" required />
+
+        <label for="transactionDescription">Description</label>
+        <input type="text" id="transactionDescription" name="description" required />
+
+        <label for="transactionCategory">Category</label>
+        <select id="transactionCategory" name="category" required>
+          <option value="">Select Category</option>
+          <option value="Grocery">Grocery</option>
+          <option value="Transport">Transport</option>
+          <option value="Food">Food</option>
+          <option value="Bills">Bills</option>
+          <option value="Other">Other</option>
+        </select>
+
+        <label for="transactionType">Type</label>
+        <select id="transactionType" name="type" required>
+          <option value="">Select Type</option>
+          <option value="expense">Expense</option>
+          <option value="income">Income</option>
+        </select>
+
+        <div class="modal-buttons">
+          <button type="submit" class="save-btn">Add</button>
+          <button type="button" class="cancel-btn" id="addTransactionModalCancel">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Edit Transaction Modal -->
+  <div id="editTransactionModal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" id="editTransactionModalClose">&times;</span>
+      <h3>Edit Transaction</h3>
+      <form id="editTransactionForm">
+        <label for="editTransactionAmount">Amount</label>
+        <input type="number" min="0.01" step="0.01" id="editTransactionAmount" name="amount" required />
+
+        <label for="editTransactionDescription">Description</label>
+        <input type="text" id="editTransactionDescription" name="description" required />
+
+        <label for="editTransactionCategory">Category</label>
+        <select id="editTransactionCategory" name="category" required>
+          <option value="">Select Category</option>
+          <option value="Grocery">Grocery</option>
+          <option value="Transport">Transport</option>
+          <option value="Food">Food</option>
+          <option value="Bills">Bills</option>
+          <option value="Other">Other</option>
+        </select>
+
+        <label for="editTransactionType">Type</label>
+        <select id="editTransactionType" name="type" required>
+          <option value="">Select Type</option>
+          <option value="expense">Expense</option>
+          <option value="income">Income</option>
+        </select>
+
+        <div class="modal-buttons">
+          <button type="submit" class="save-btn">Save</button>
+          <button type="button" class="cancel-btn" id="editTransactionModalCancel">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Link to your main JavaScript -->
   <script src="script.js"></script>
 
   <script>
-    // Initialize Supabase client — replace below values with your project credentials
+    // Initialize Supabase client - Replace with your own credentials
     const SUPABASE_URL = 'https://teafrrntffzraoiuurie.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRlYWZycm50ZmZ6cmFvaXV1cmllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM1OTMwMzgsImV4cCI6MjA2OTE2OTAzOH0.EZ7Lkxo_H1lZMMMH9OmjqKm3ALcIRripTzYrz7FosZs';
     window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    // Load initial data — you can also trigger these in script.js navigation handlers
+    // Load initial data on page load
     document.addEventListener('DOMContentLoaded', () => {
       if (typeof loadTodos === 'function') loadTodos();
       if (typeof loadContacts === 'function') loadContacts();
+      if (typeof loadFinance === 'function') loadFinance();
     });
   </script>
-
 </body>
 </html>

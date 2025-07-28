@@ -1,10 +1,11 @@
-// ========== SUPABASE INITIALIZATION ==========
-// Replace these with your actual Supabase project credentials
+// ==================== SUPABASE INITIALIZATION =====================
+// Replace these with your actual keys from your Supabase project
 const SUPABASE_URL = 'https://teafrrntffzraoiuurie.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRlYWZycm50ZmZ6cmFvaXV1cmllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM1OTMwMzgsImV4cCI6MjA2OTE2OTAzOH0.EZ7Lkxo_H1lZMMMH9OmjqKm3ALcIRripTzYrz7FosZs';
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// ========== SIDEBAR NAVIGATION ==========
+// ==================== SIDEBAR NAVIGATION =========================
+
 const dashboardLink = document.getElementById('dashboardLink');
 const financeLink = document.getElementById('financeLink');
 const todoLink = document.getElementById('todoListLink');
@@ -19,9 +20,6 @@ const contactsSection = document.getElementById('contactsSection');
 
 const sidebarLinks = document.querySelectorAll('.sidebar ul li a');
 
-/**
- * Hide all main content sections
- */
 function hideAllSections() {
   dashboardSection.style.display = 'none';
   financeSection.style.display = 'none';
@@ -30,13 +28,11 @@ function hideAllSections() {
   contactsSection.style.display = 'none';
 }
 
-/**
- * Remove 'active' classes from all sidebar links
- */
 function clearSidebarActive() {
   sidebarLinks.forEach(link => link.classList.remove('active'));
 }
 
+// Event listeners for sidebar navigation
 dashboardLink.onclick = function(e) {
   e.preventDefault();
   hideAllSections();
@@ -44,24 +40,22 @@ dashboardLink.onclick = function(e) {
   clearSidebarActive();
   dashboardLink.classList.add('active');
 };
-
 financeLink.onclick = function(e) {
   e.preventDefault();
   hideAllSections();
   financeSection.style.display = 'block';
   clearSidebarActive();
   financeLink.classList.add('active');
+  loadFinance();
 };
-
 todoLink.onclick = function(e) {
   e.preventDefault();
   hideAllSections();
   todoSection.style.display = 'block';
   clearSidebarActive();
   todoLink.classList.add('active');
-  loadTodos(); // Load todos when showing todo section
+  loadTodos();
 };
-
 notesLink.onclick = function(e) {
   e.preventDefault();
   hideAllSections();
@@ -69,38 +63,48 @@ notesLink.onclick = function(e) {
   clearSidebarActive();
   notesLink.classList.add('active');
 };
-
 contactsLink.onclick = function(e) {
   e.preventDefault();
   hideAllSections();
   contactsSection.style.display = 'block';
   clearSidebarActive();
   contactsLink.classList.add('active');
-  loadContacts(); // Load contacts when showing contacts section
+  loadContacts();
 };
 
+// Initialize first view
 window.onload = function() {
   hideAllSections();
   dashboardSection.style.display = 'block';
   clearSidebarActive();
   dashboardLink.classList.add('active');
+  // Load initial data for dynamic sections
   loadTodos();
   loadContacts();
+  loadFinance();
 };
 
-// ====== Helpers for formatting =======
+// ==================== HELPER FUNCTIONS ===========================
 function formatStatus(str) {
+  // Convert e.g., 'in-progress' → 'In Progress'
   return str.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
 }
 function capitalize(str) {
+  if (!str) return '';
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
+function formatTxDate(str) {
+  const d = new Date(str);
+  if (isNaN(d)) return str;
+  return d.toLocaleDateString() + ' ' + d.toLocaleTimeString().slice(0,5);
+}
+function formatAmount(n) {
+  return parseFloat(n).toLocaleString(undefined, {minimumFractionDigits:2});
+}
 
-// ========== TODO LIST ==========
+// ==================== TODO LIST FUNCTIONALITY =====================
 
-/**
- * Fetch and render todo items from Supabase
- */
+// Load todos from Supabase and render
 async function loadTodos() {
   const tbody = document.querySelector('#todoTable tbody');
   if (!tbody) return;
@@ -140,7 +144,7 @@ async function loadTodos() {
   });
 }
 
-// --- Add Task Modal Handling ---
+// Add Task Modal Handling
 const addModal = document.getElementById('addModal');
 const addModalClose = document.getElementById('addModalClose');
 const addModalCancel = document.getElementById('addModalCancel');
@@ -148,7 +152,7 @@ const addTodoForm = document.getElementById('addTodoForm');
 const addTaskBtn = document.querySelector('.add-task-btn');
 
 if (addTaskBtn) {
-  addTaskBtn.addEventListener('click', function () {
+  addTaskBtn.addEventListener('click', () => {
     addModal.style.display = 'block';
     addTodoForm.reset();
   });
@@ -156,9 +160,11 @@ if (addTaskBtn) {
 function closeAddModal() { addModal.style.display = 'none'; }
 addModalClose?.addEventListener('click', closeAddModal);
 addModalCancel?.addEventListener('click', closeAddModal);
-window.addEventListener('click', (event) => { if (event.target === addModal) closeAddModal(); });
+window.addEventListener('click', (event) => {
+  if (event.target === addModal) closeAddModal();
+});
 
-addTodoForm.addEventListener('submit', async function (event) {
+addTodoForm.addEventListener('submit', async (event) => {
   event.preventDefault();
   const title = document.getElementById('addTitle').value;
   const statusValue = document.getElementById('addStatus').value;
@@ -177,7 +183,7 @@ addTodoForm.addEventListener('submit', async function (event) {
   }
 });
 
-// --- Edit Task Modal Handling ---
+// Edit Task Modal Handling
 const editModal = document.getElementById('editModal');
 const editModalClose = document.getElementById('editModalClose');
 const editModalCancel = document.getElementById('editModalCancel');
@@ -190,13 +196,13 @@ const editDeadline = document.getElementById('editDeadline');
 const editPriority = document.getElementById('editPriority');
 let editingTodoId = null;
 
-document.addEventListener('click', function(event) {
+document.addEventListener('click', async function(event) {
   const editBtn = event.target.closest('.actions .edit');
   if (editBtn) {
     const row = editBtn.closest('tr');
     editingTodoId = editBtn.dataset.id;
 
-    // Title
+    // Populate fields
     let titleText = '';
     const titleTd = row.cells[1];
     for (const node of titleTd.childNodes) {
@@ -204,16 +210,14 @@ document.addEventListener('click', function(event) {
     }
     editTitle.value = titleText;
 
-    // Status
     const statusSpan = row.cells[2].querySelector('span.status-label');
     let statusClass = 'not-started';
-    if (statusSpan) {
+    if(statusSpan){
       const classes = Array.from(statusSpan.classList);
       statusClass = classes.find(c => c !== 'status-label') || statusSpan.textContent.toLowerCase().replace(/\s+/g, '-');
     }
     editStatus.value = statusClass;
 
-    // Assigned To
     let assignedText = '';
     const assignedTd = row.cells[3];
     for (const node of assignedTd.childNodes) {
@@ -221,14 +225,11 @@ document.addEventListener('click', function(event) {
     }
     editAssignedTo.value = assignedText;
 
-    // Assigned Avatar Src
     const avatarAssigned = assignedTd.querySelector('img');
     editAssignedAvatar.value = avatarAssigned ? avatarAssigned.src : '';
 
-    // Deadline
     editDeadline.value = row.cells[4].textContent.trim();
 
-    // Priority
     const prioritySpan = row.cells[5].querySelector('span.priority-label');
     let priorityClass = 'medium';
     if (prioritySpan) {
@@ -240,21 +241,22 @@ document.addEventListener('click', function(event) {
     editModal.style.display = 'block';
   }
 
-  // --- Delete functionality (fixed await here) ---
+  // Delete Task Handling
   const deleteBtn = event.target.closest('.actions .delete');
   if (deleteBtn) {
-    (async () => {
-      const todoId = deleteBtn.dataset.id;
-      if (confirm('Delete this task?')) {
-        try {
-          const { error } = await supabase.from('todos').delete().eq('id', todoId);
-          if (error) alert('Delete failed: ' + error.message);
-          else loadTodos();
-        } catch (err) {
-          alert('Error deleting: ' + err.message);
+    const todoId = deleteBtn.dataset.id;
+    if(confirm('Delete this task?')){
+      try {
+        const { error } = await supabase.from('todos').delete().eq('id', todoId);
+        if(error) {
+          alert('Delete failed: ' + error.message);
+        } else {
+          loadTodos();
         }
+      } catch(err) {
+        alert('Error deleting: ' + err.message);
       }
-    })();
+    }
   }
 });
 
@@ -264,12 +266,13 @@ function closeEditModal() {
 }
 editModalClose?.addEventListener('click', closeEditModal);
 editModalCancel?.addEventListener('click', closeEditModal);
-window.addEventListener('click', (event) => { if (event.target === editModal) closeEditModal(); });
+window.addEventListener('click', (event) => {
+  if (event.target === editModal) closeEditModal();
+});
 
-editTodoForm.addEventListener('submit', async function(event){
+editTodoForm.addEventListener('submit', async (event) => {
   event.preventDefault();
-  if(!editingTodoId) return;
-
+  if (!editingTodoId) return;
   const { error } = await supabase.from('todos').update({
     title: editTitle.value,
     status: editStatus.value,
@@ -278,7 +281,6 @@ editTodoForm.addEventListener('submit', async function(event){
     deadline: editDeadline.value,
     priority: editPriority.value
   }).eq('id', editingTodoId);
-
   if (error) alert('Edit failed! ' + error.message);
   else {
     closeEditModal();
@@ -286,36 +288,35 @@ editTodoForm.addEventListener('submit', async function(event){
   }
 });
 
-// ========== Todo List Select All ==========
+// Todo List Select All
 const selectAllCheckbox = document.getElementById('selectAll');
 if (selectAllCheckbox) {
   selectAllCheckbox.addEventListener('change', function() {
     const checkboxes = document.querySelectorAll('#todoTable tbody input[type="checkbox"]');
-    checkboxes.forEach(cb => { cb.checked = selectAllCheckbox.checked; });
+    checkboxes.forEach(cb => cb.checked = selectAllCheckbox.checked);
   });
 }
 
-// ========== CONTACTS ==========
+// ==================== CONTACTS ==========================
+
 async function loadContacts() {
   const grid = document.querySelector('.contacts-grid');
   if (!grid) return;
   grid.innerHTML = '<div style="color:#888;text-align:center;">Loading...</div>';
   const { data: contacts, error } = await supabase.from('contacts').select('*').order('id', { ascending: true });
   if (error) {
-    grid.innerHTML = `<div style="color:red;">Error fetching contacts</div>`;
+    grid.innerHTML = '<div style="color:red;">Error fetching contacts</div>';
     return;
   }
   if (!contacts || contacts.length === 0) {
-    grid.innerHTML = `<div style="color:#888;">No contacts yet.</div>`;
+    grid.innerHTML = '<div style="color:#888;">No contacts yet.</div>';
     return;
   }
   grid.innerHTML = '';
   contacts.forEach(contact => {
     grid.innerHTML += `
       <div class="contact-card">
-        <div class="contact-avatar">
-          <img src="${contact.avatar}" alt="${contact.name}" />
-        </div>
+        <div class="contact-avatar"><img src="${contact.avatar}" alt="${contact.name}" /></div>
         <div class="contact-info">
           <div class="contact-name">${contact.name}</div>
           <div class="contact-email">${contact.email}</div>
@@ -326,7 +327,7 @@ async function loadContacts() {
   });
 }
 
-// ========== ADD CONTACT MODAL & LOGIC ==========
+// Add Contact Modal & Logic
 const addContactBtn = document.querySelector('.add-contact-btn');
 const addContactModal = document.getElementById('addContactModal');
 const addContactModalClose = document.getElementById('addContactModalClose');
@@ -339,35 +340,236 @@ if (addContactBtn) {
     addContactForm.reset();
   });
 }
-
 const closeAddContactModal = () => {
   addContactModal.style.display = 'none';
 };
-
 addContactModalClose?.addEventListener('click', closeAddContactModal);
 addContactModalCancel?.addEventListener('click', closeAddContactModal);
 window.addEventListener('click', (event) => {
   if (event.target === addContactModal) closeAddContactModal();
 });
-
 addContactForm.addEventListener('submit', async (event) => {
   event.preventDefault();
-
   const name = document.getElementById('contactName').value.trim();
   const email = document.getElementById('contactEmail').value.trim();
   const avatar = document.getElementById('contactAvatar').value.trim();
   const type = document.getElementById('contactType').value;
-
   if (!name || !email || !avatar || !type) {
     alert('Please fill in all fields.');
     return;
   }
-
   const { error } = await supabase.from('contacts').insert([{ name, email, avatar, type }]);
-
   if (error) alert('Failed to add contact: ' + error.message);
   else {
     closeAddContactModal();
     loadContacts();
+  }
+});
+
+// ==================== FINANCE =============================
+
+// Expense category colors for chart
+const EXPENSE_PALETTE = [
+  "#5A8DEE", "#eb4359", "#02cfcf", "#ff9800", "#6658e3", "#00CF92", "#fbdb47"
+];
+
+let expenseChart = null;
+
+function renderExpenseChart(labels, data) {
+  const ctx = document.getElementById('expenseChart').getContext('2d');
+  if (expenseChart) expenseChart.destroy();
+  if (labels.length === 0) {
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    document.getElementById('expenseLegend').innerHTML = '';
+    return;
+  }
+  expenseChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: labels,
+      datasets: [{
+        data: data,
+        backgroundColor: labels.map((_, i) => EXPENSE_PALETTE[i % EXPENSE_PALETTE.length]),
+        borderWidth: 1.5
+      }]
+    },
+    options: {
+      plugins: { legend: { display: false } },
+      cutout: '65%',
+      responsive: false
+    }
+  });
+
+  // Custom legend
+  document.getElementById('expenseLegend').innerHTML = labels.map((c, i) =>
+    `<span class="legend-item"><span class="legend-dot" style="background:${EXPENSE_PALETTE[i % EXPENSE_PALETTE.length]}"></span>${c}</span>`
+  ).join('');
+}
+
+function formatFinanceDate(str) {
+  const d = new Date(str);
+  if (isNaN(d)) return str;
+  return d.toLocaleDateString() + ' ' + d.toLocaleTimeString().slice(0, 5);
+}
+
+async function loadFinance() {
+  const tbody = document.querySelector('#transactionsTable tbody');
+  if (!tbody) return;
+  tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#888;">Loading...</td></tr>';
+  const { data: txs, error } = await supabase.from('transactions').select('*').order('date', { descending: true });
+
+  if (error || !txs) {
+    tbody.innerHTML = `<tr><td colspan="6" style="color:red;">Unable to fetch transactions</td></tr>`;
+    renderExpenseChart([], []);
+    return;
+  }
+
+  if (txs.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="6" style="color:#888;">No transactions yet.</td></tr>`;
+    renderExpenseChart([], []);
+    return;
+  }
+
+  tbody.innerHTML = '';
+  txs.forEach(tx => {
+    const tr = document.createElement('tr');
+    tr.dataset.id = tx.id;
+    tr.innerHTML = `
+      <td>${formatFinanceDate(tx.date)}</td>
+      <td>${tx.description}</td>
+      <td>${tx.category}</td>
+      <td>${capitalize(tx.type)}</td>
+      <td style="color:${tx.type === 'expense' ? '#e04141' : '#19b890'}; font-weight: 600;">
+        ${tx.type === 'expense' ? '-' : '+'}${formatAmount(tx.amount)}
+      </td>
+      <td class="actions">
+        <button class="edit" title="Edit">&#9998;</button>
+        <button class="delete" title="Delete">&#10005;</button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  // Aggregate expenses by category for chart
+  const catMap = {};
+  txs.filter(t => t.type === 'expense').forEach(tx => {
+    catMap[tx.category] = (catMap[tx.category] || 0) + Number(tx.amount);
+  });
+  const cats = Object.keys(catMap);
+  const vals = cats.map(c => catMap[c]);
+  renderExpenseChart(cats, vals);
+}
+
+// Add Transaction Modal Logic
+const addTransactionBtn = document.querySelector('.add-transaction-btn');
+const addTransactionModal = document.getElementById('addTransactionModal');
+const addTransactionModalClose = document.getElementById('addTransactionModalClose');
+const addTransactionModalCancel = document.getElementById('addTransactionModalCancel');
+const addTransactionForm = document.getElementById('addTransactionForm');
+
+if (addTransactionBtn) {
+  addTransactionBtn.addEventListener('click', () => {
+    addTransactionModal.style.display = 'block';
+    addTransactionForm.reset();
+  });
+}
+function closeAddTransactionModal() { addTransactionModal.style.display = 'none'; }
+addTransactionModalClose?.addEventListener('click', closeAddTransactionModal);
+addTransactionModalCancel?.addEventListener('click', closeAddTransactionModal);
+window.addEventListener('click', (event) => {
+  if (event.target === addTransactionModal) closeAddTransactionModal();
+});
+
+addTransactionForm.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  const amount = parseFloat(document.getElementById('transactionAmount').value);
+  const description = document.getElementById('transactionDescription').value.trim();
+  const category = document.getElementById('transactionCategory').value;
+  const type = document.getElementById('transactionType').value;
+  if (!amount || !description || !category || !type) {
+    alert('Please fill in all fields.');
+    return;
+  }
+  const { error } = await supabase.from('transactions').insert([
+    {
+      amount, description, category, type, date: new Date().toISOString()
+    }
+  ]);
+  if (error) alert('Failed to add transaction: ' + error.message);
+  else {
+    closeAddTransactionModal();
+    loadFinance();
+  }
+});
+
+// Edit Transaction Modal Logic
+const editTransactionModal = document.getElementById('editTransactionModal');
+const editTransactionModalClose = document.getElementById('editTransactionModalClose');
+const editTransactionModalCancel = document.getElementById('editTransactionModalCancel');
+const editTransactionForm = document.getElementById('editTransactionForm');
+
+let editingTransactionId = null;
+
+function openEditTransactionModal(row) {
+  if (!row) return;
+  editingTransactionId = row.dataset.id;
+
+  const tds = row.querySelectorAll('td');
+  document.getElementById('editTransactionAmount').value = parseFloat(tds[4].textContent.replace(/[^\d.-]/g, ''));
+  document.getElementById('editTransactionDescription').value = tds[1].textContent;
+  document.getElementById('editTransactionCategory').value = tds[2].textContent;
+  document.getElementById('editTransactionType').value = tds[3].textContent.toLowerCase();
+
+  editTransactionModal.style.display = 'block';
+}
+
+function closeEditTransactionModal() { editTransactionModal.style.display = 'none'; editingTransactionId = null; }
+editTransactionModalClose?.addEventListener('click', closeEditTransactionModal);
+editTransactionModalCancel?.addEventListener('click', closeEditTransactionModal);
+window.addEventListener('click', (event) => {
+  if (event.target === editTransactionModal) closeEditTransactionModal();
+});
+
+editTransactionForm.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  if (!editingTransactionId) return;
+
+  const amount = parseFloat(document.getElementById('editTransactionAmount').value);
+  const description = document.getElementById('editTransactionDescription').value.trim();
+  const category = document.getElementById('editTransactionCategory').value;
+  const type = document.getElementById('editTransactionType').value;
+
+  if (!amount || !description || !category || !type) {
+    alert('Please fill in all fields.');
+    return;
+  }
+  const { error } = await supabase.from('transactions').update({
+    amount, description, category, type
+  }).eq('id', editingTransactionId);
+  if (error) alert('Failed to save changes: ' + error.message);
+  else {
+    closeEditTransactionModal();
+    loadFinance();
+  }
+});
+
+// Transaction Delete Handler
+document.addEventListener('click', async (event) => {
+  if (event.target.closest('.transactions-table .delete')) {
+    const row = event.target.closest('tr');
+    const id = row.dataset.id;
+    if(confirm('Are you sure you want to delete this transaction?')){
+      const { error } = await supabase.from('transactions').delete().eq('id', id);
+      if(error) alert('Delete failed: ' + error.message);
+      else loadFinance();
+    }
+  }
+});
+
+// Transaction Edit Button Handler
+document.addEventListener('click', (event) => {
+  if (event.target.closest('.transactions-table .edit')) {
+    const row = event.target.closest('tr');
+    openEditTransactionModal(row);
   }
 });
