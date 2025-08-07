@@ -1,419 +1,312 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Personal-Assistance Dashboard</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-  <!-- CSS -->
-  <link rel="stylesheet" href="style.css" />
-
-  <!-- Chart.js for charts -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-  <!-- Supabase JS SDK -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js/dist/umd/supabase.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finance Manager</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 </head>
 <body>
+    <!-- Mobile Toggle Button -->
+    <button class="mobile-toggle" id="sidebarToggle">
+        <i class="fas fa-bars"></i>
+    </button>
 
-  <!-- Sidebar Navigation -->
-  <div class="sidebar">
-    <h2>Personal-Assistance</h2>
-    <ul>
-      <li><a href="#" id="dashboardLink" class="active">Dashboard</a></li>
-      <li><a href="#" id="financeLink">Finance</a></li>
-      <li><a href="#" id="todoListLink">Todo List</a></li>
-      <li><a href="#" id="notesLink">Notes</a></li>
-      <li><a href="#" id="contactsLink">Contacts</a></li>
-    </ul>
-  </div>
-
-  <!-- Dashboard Section -->
-  <div class="main-content" id="dashboardSection">
-    <div class="header">
-      <div class="welcome">Good Morning, John Smith</div>
-      <div class="profile">
-        <span>🔔</span>
-        <span><strong>John Smith</strong></span>
-        <span class="avatar-placeholder"></span>
-      </div>
-    </div>
-    <div class="cards">
-      <div class="card">
-        <div class="card-title">Total Orders</div>
-        <div class="card-value">25,894</div>
-        <div class="stats">▲ 12.5% vs last 7 days</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Monthly Orders</div>
-        <div class="card-value">57,800</div>
-        <div class="stats negative">▼ 1.5% vs last 7 days</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Monthly Revenue</div>
-        <div class="card-value">$637,254</div>
-        <div class="stats">▲ 12.8% vs last 7 days</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Out of Stock</div>
-        <div class="card-value">142 Items</div>
-        <div class="stats">▲ 18% vs last 7 days</div>
-      </div>
-    </div>
-    <div class="charts-row">
-      <div class="chart">
-        <div class="chart-title">Sales Report</div>
-        <div class="chart-placeholder">[Sales Chart Here]</div>
-      </div>
-      <div class="chart">
-        <div class="chart-title">Sales by Country</div>
-        <div class="chart-placeholder">[Radar Chart Here]</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Finance Section -->
-  <div class="main-content" id="financeSection" style="display:none;">
-    <div class="header sticky-header" style="justify-content: space-between;">
-      <div class="welcome">Personal Finance</div>
-      <button class="add-transaction-btn">+ Add Transaction</button>
-    </div>
-    <div class="finance-grid">
-      <div class="expense-categories-panel">
-        <h3 class="panel-title">Expense Categories</h3>
-        <canvas id="expenseChart" width="270" height="220"></canvas>
-        <div class="legend-list" id="expenseLegend"></div>
-      </div>
-      <div class="transactions-panel">
-        <h3 class="panel-title">Recent Transactions</h3>
-        <table class="transactions-table" id="transactionsTable">
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Description</th>
-              <th>Category</th>
-              <th>Type</th>
-              <th>Amount</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            <!-- Transactions load here dynamically -->
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-
-  <!-- Todo List Section -->
-  <div class="main-content" id="todoSection" style="display:none;">
-    <div class="header sticky-header">
-      <div class="welcome">Todo List</div>
-      <button class="add-task-btn">+ Add Task</button>
-    </div>
-    <div class="todo-table-container">
-      <table class="todo-table" id="todoTable">
-        <thead>
-          <tr>
-            <th><input type="checkbox" id="selectAll" /></th>
-            <th>Customer</th>
-            <th>Status</th>
-            <th>Assigned To</th>
-            <th>Deadline</th>
-            <th>Priority</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- Todo items loaded dynamically -->
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- Notes Section -->
-  <div class="main-content" id="notesSection" style="display:none;">
-    <div class="header sticky-header">
-      <div class="welcome">Notes</div>
-    </div>
-    <p style="color:#888; padding-top: 20px;">[Notes module coming soon]</p>
-  </div>
-
-  <!-- Contacts Section -->
-  <div class="main-content" id="contactsSection" style="display:none;">
-    <div class="header sticky-header" style="justify-content: space-between;">
-      <div class="welcome">Contacts</div>
-      <button class="add-contact-btn">+ Add Contact</button>
-    </div>
-    <div class="contacts-grid">
-      <!-- Contact cards injected dynamically -->
-    </div>
-  </div>
-
-  <!-- Add New Task Modal -->
-  <!-- <div id="addModal" class="modal">
-    <div class="modal-content">
-      <span class="close-btn" id="addModalClose">&times;</span>
-      <h3>Add New Todo Task</h3>
-      <form id="addTodoForm">
-        <label for="addTitle">Title</label>
-        <input type="text" id="addTitle" name="title" required />
-
-        <label for="addStatus">Status</label>
-        <select id="addStatus" name="status">
-          <option value="in-progress">In Progress</option>
-          <option value="not-started">Not Started</option>
-          <option value="completed">Completed</option>
-          <option value="inactive">Inactive</option>
-          <option value="active">Active</option>
-        </select>
-
-        <label for="addAssignedTo">Assigned To</label>
-        <input type="text" id="addAssignedTo" name="assignedTo" required />
-
-        <label for="addAssignedAvatar">Profile Avatar URL</label>
-        <input type="text" id="addAssignedAvatar" name="assignedAvatar" placeholder="Paste avatar image URL" required />
-
-        <label for="addDeadline">Deadline</label>
-        <input type="text" id="addDeadline" name="deadline" placeholder="e.g. Due in 3 days" required />
-
-        <label for="addPriority">Priority</label>
-        <select id="addPriority" name="priority">
-          <option value="high">High</option>
-          <option value="medium">Medium</option>
-          <option value="low">Low</option>
-        </select>
-
-        <div class="modal-buttons">
-          <button type="submit" class="save-btn">Add</button>
-          <button type="button" class="cancel-btn" id="addModalCancel">Cancel</button>
+    <!-- Dashboard Container -->
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <a href="#" class="text-decoration-none d-flex align-items-center">
+                    <i class="fas fa-wallet text-warning me-2"></i>
+                    <span class="text-white">Finance Manager</span>
+                </a>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="active">
+                        <a href="#">
+                            <i class="fas fa-chart-line"></i>
+                            Dashboard
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-cog"></i>
+                            Settings
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" id="logoutButton">
+                            <i class="fas fa-sign-out-alt"></i>
+                            Logout
+                        </a>
+                    </li>
+                </ul>
+            </nav>
         </div>
-      </form>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Navigation -->
+            <nav class="top-nav">
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search transactions..." id="searchInput">
+                </div>
+                <div class="nav-right">
+                    <div class="user-profile">
+                        <div class="dropdown">
+                            <button class="btn btn-link text-dark text-decoration-none dropdown-toggle d-flex align-items-center" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-user-circle me-2" style="font-size: 1.5rem;"></i>
+                                <span id="usernameDisplay">User</span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Settings</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-danger" href="#" id="logoutDropdown"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Dashboard Content -->
+            <div class="dashboard-content">
+                <!-- Summary Cards -->
+                <div class="row summary-cards g-4 mb-4">
+                    <div class="col-md-3">
+                        <div class="card bg-primary text-white">
+                            <div class="card-body">
+                                <h6 class="card-subtitle mb-2">Total Income</h6>
+                                <h3 class="card-title mb-0" id="totalIncome">₹0.00</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card bg-danger text-white">
+                            <div class="card-body">
+                                <h6 class="card-subtitle mb-2">Total Expenses</h6>
+                                <h3 class="card-title mb-0" id="totalExpense">₹0.00</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card bg-success text-white">
+                            <div class="card-body">
+                                <h6 class="card-subtitle mb-2">Balance</h6>
+                                <h3 class="card-title mb-0" id="balance">₹0.00</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card bg-info text-white">
+                            <div class="card-body">
+                                <h6 class="card-subtitle mb-2">Savings Rate</h6>
+                                <h3 class="card-title mb-0" id="savingsRate">0%</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts and Transactions Row -->
+                <div class="row charts-row">
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Expense Categories</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <canvas id="expenseChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5>Recent Transactions</h5>
+                                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addTransactionModal">
+                                    <i class="fas fa-plus"></i> Add Transaction
+                                </button>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Date</th>
+                                                <th>Description</th>
+                                                <th>Category</th>
+                                                <th>Type</th>
+                                                <th>Amount</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="transactionsTable">
+                                            <!-- Transactions will be loaded here -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
-  </div> -->
-  <div id="addModal" class="modal">
-  <div class="modal-content">
-    <span class="close-btn" id="addModalClose">&times;</span>
-    <h3>Add New Todo Task</h3>
-    <form id="addTodoForm">
-      <!-- First Row: Title (full width) -->
-      <div class="todo-form-row">
-        <div class="todo-form-col" style="flex:1;">
-          <label for="addTitle">Title</label>
-          <input type="text" id="addTitle" name="title" required />
+
+    <!-- Add Transaction Modal -->
+    <div class="modal fade" id="addTransactionModal" tabindex="-1" aria-labelledby="addTransactionModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addTransactionModalLabel">Add New Transaction</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="transactionForm">
+                        <div class="mb-3">
+                            <label for="amount" class="form-label">Amount (₹)</label>
+                            <input type="number" class="form-control" id="amount" step="0.01" min="0.01" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description</label>
+                            <input type="text" class="form-control" id="description" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="category" class="form-label">Category</label>
+                            <select class="form-select" id="category" required>
+                                <option value="">Select Category</option>
+                                <option value="Food">Food</option>
+                                <option value="Transport">Transport</option>
+                                <option value="Entertainment">Entertainment</option>
+                                <option value="Bills">Bills</option>
+                                <option value="Shopping">Shopping</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="type" class="form-label">Type</label>
+                            <select class="form-select" id="type" required>
+                                <option value="">Select Type</option>
+                                <option value="income">Income</option>
+                                <option value="expense">Expense</option>
+                            </select>
+                        </div>
+                        <div class="text-end">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Add Transaction</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-      </div>
-      <!-- Second Row: Status and Assigned To -->
-      <div class="todo-form-row">
-        <div class="todo-form-col">
-          <label for="addStatus">Status</label>
-          <select id="addStatus" name="status">
-            <option value="in-progress">In Progress</option>
-            <option value="not-started">Not Started</option>
-            <option value="completed">Completed</option>
-            <option value="inactive">Inactive</option>
-            <option value="active">Active</option>
-          </select>
-        </div>
-        <div class="todo-form-col">
-          <label for="addAssignedTo">Assigned To</label>
-          <input type="text" id="addAssignedTo" name="assignedTo" required />
-        </div>
-      </div>
-      <!-- Third Row: Avatar & Deadline -->
-      <div class="todo-form-row">
-        <div class="todo-form-col">
-          <label for="addAssignedAvatar">Profile Avatar URL</label>
-          <input type="text" id="addAssignedAvatar" name="assignedAvatar" required />
-        </div>
-        <div class="todo-form-col">
-          <label for="addDeadline">Deadline</label>
-          <input type="text" id="addDeadline" name="deadline" required />
-        </div>
-      </div>
-      <!-- Fourth Row: Priority alone (leave extra space for symmetry) -->
-      <div class="todo-form-row">
-        <div class="todo-form-col" style="flex: 0 0 48%;">
-          <label for="addPriority">Priority</label>
-          <select id="addPriority" name="priority">
-            <option value="high">High</option>
-            <option value="medium">Medium</option>
-            <option value="low">Low</option>
-          </select>
-        </div>
-        <div class="todo-form-col" style="flex: 0 0 48%;"></div>
-      </div>
-      <!-- Buttons Row -->
-      <div class="todo-form-row todo-form-buttons">
-        <button type="submit" class="save-btn">Add</button>
-        <button type="button" class="cancel-btn" id="addModalCancel">Cancel</button>
-      </div>
-    </form>
-  </div>
-</div>
-
-
-  <!-- Edit Task Modal -->
-  <div id="editModal" class="modal">
-    <div class="modal-content">
-      <span class="close-btn" id="editModalClose">&times;</span>
-      <h3>Edit Todo Task</h3>
-      <form id="editTodoForm">
-        <label for="editTitle">Title</label>
-        <input type="text" id="editTitle" name="title" required />
-
-        <label for="editStatus">Status</label>
-        <select id="editStatus" name="status">
-          <option value="in-progress">In Progress</option>
-          <option value="not-started">Not Started</option>
-          <option value="completed">Completed</option>
-          <option value="inactive">Inactive</option>
-          <option value="active">Active</option>
-        </select>
-
-        <label for="editAssignedTo">Assigned To</label>
-        <input type="text" id="editAssignedTo" name="assignedTo" required />
-
-        <label for="editAssignedAvatar">Profile Avatar URL</label>
-        <input type="text" id="editAssignedAvatar" name="assignedAvatar" placeholder="Paste avatar image URL" required />
-
-        <label for="editDeadline">Deadline</label>
-        <input type="text" id="editDeadline" name="deadline" placeholder="e.g. Due in 3 days or 15 August 2024" required />
-
-        <label for="editPriority">Priority</label>
-        <select id="editPriority" name="priority">
-          <option value="high">High</option>
-          <option value="medium">Medium</option>
-          <option value="low">Low</option>
-        </select>
-
-        <div class="modal-buttons">
-          <button type="submit" class="save-btn">Save</button>
-          <button type="button" class="cancel-btn" id="editModalCancel">Cancel</button>
-        </div>
-      </form>
     </div>
-  </div>
 
-  <!-- Add New Contact Modal -->
-  <div id="addContactModal" class="modal">
-    <div class="modal-content">
-      <span class="close-btn" id="addContactModalClose">&times;</span>
-      <h3>Add New Contact</h3>
-      <form id="addContactForm">
-        <label for="contactName">Name</label>
-        <input type="text" id="contactName" name="name" required />
-
-        <label for="contactEmail">Email</label>
-        <input type="email" id="contactEmail" name="email" required />
-
-        <label for="contactAvatar">Avatar URL</label>
-        <input type="text" id="contactAvatar" name="avatar" placeholder="Paste avatar image URL" required />
-
-        <label for="contactType">Type</label>
-        <select id="contactType" name="type" required>
-          <option value="">Select type</option>
-          <option value="Lead">Lead</option>
-          <option value="Customer">Customer</option>
-        </select>
-
-        <div class="modal-buttons">
-          <button type="submit" class="save-btn">Add</button>
-          <button type="button" class="cancel-btn" id="addContactModalCancel">Cancel</button>
+    <!-- Edit Transaction Modal -->
+    <div class="modal fade" id="editTransactionModal" tabindex="-1" aria-labelledby="editTransactionModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editTransactionModalLabel">Edit Transaction</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editTransactionForm">
+                        <input type="hidden" id="editId">
+                        <div class="mb-3">
+                            <label for="editAmount" class="form-label">Amount (₹)</label>
+                            <input type="number" class="form-control" id="editAmount" step="0.01" min="0.01" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editDescription" class="form-label">Description</label>
+                            <input type="text" class="form-control" id="editDescription" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editCategory" class="form-label">Category</label>
+                            <select class="form-select" id="editCategory" required>
+                                <option value="">Select Category</option>
+                                <option value="Food">Food</option>
+                                <option value="Transport">Transport</option>
+                                <option value="Entertainment">Entertainment</option>
+                                <option value="Bills">Bills</option>
+                                <option value="Shopping">Shopping</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editType" class="form-label">Type</label>
+                            <select class="form-select" id="editType" required>
+                                <option value="">Select Type</option>
+                                <option value="income">Income</option>
+                                <option value="expense">Expense</option>
+                            </select>
+                        </div>
+                        <div class="text-end">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Update Transaction</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-      </form>
+    </div>
+      <!-- Logout Confirmation Modal -->
+  <div
+    class="modal fade"
+    id="logoutModal"
+    tabindex="-1"
+    aria-labelledby="logoutModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content rounded-2xl shadow-lg">
+        <div class="modal-header">
+          <h5 class="modal-title" id="logoutModalLabel">Confirm Logout</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          Are you sure you want to log out?
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            id="confirmLogoutBtn"
+            class="btn btn-danger"
+          >
+            Logout
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- Add Transaction Modal -->
-  <div id="addTransactionModal" class="modal">
-    <div class="modal-content">
-      <span class="close-btn" id="addTransactionModalClose">&times;</span>
-      <h3>Add New Transaction</h3>
-      <form id="addTransactionForm">
-        <label for="transactionAmount">Amount</label>
-        <input type="number" min="0.01" step="0.01" id="transactionAmount" name="amount" required />
+  <!-- Bootstrap JS bundle (needed for modal) -->
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+  ></script>
+</body>
 
-        <label for="transactionDescription">Description</label>
-        <input type="text" id="transactionDescription" name="description" required />
 
-        <label for="transactionCategory">Category</label>
-        <select id="transactionCategory" name="category" required>
-          <option value="">Select Category</option>
-          <option value="Grocery">Grocery</option>
-          <option value="Transport">Transport</option>
-          <option value="Food">Food</option>
-          <option value="Bills">Bills</option>
-          <option value="Other">Other</option>
-        </select>
-
-        <label for="transactionType">Type</label>
-        <select id="transactionType" name="type" required>
-          <option value="">Select Type</option>
-          <option value="expense">Expense</option>
-          <option value="income">Income</option>
-        </select>
-
-        <div class="modal-buttons">
-          <button type="submit" class="save-btn">Add</button>
-          <button type="button" class="cancel-btn" id="addTransactionModalCancel">Cancel</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- Edit Transaction Modal -->
-  <div id="editTransactionModal" class="modal">
-    <div class="modal-content">
-      <span class="close-btn" id="editTransactionModalClose">&times;</span>
-      <h3>Edit Transaction</h3>
-      <form id="editTransactionForm">
-        <label for="editTransactionAmount">Amount</label>
-        <input type="number" min="0.01" step="0.01" id="editTransactionAmount" name="amount" required />
-
-        <label for="editTransactionDescription">Description</label>
-        <input type="text" id="editTransactionDescription" name="description" required />
-
-        <label for="editTransactionCategory">Category</label>
-        <select id="editTransactionCategory" name="category" required>
-          <option value="">Select Category</option>
-          <option value="Grocery">Grocery</option>
-          <option value="Transport">Transport</option>
-          <option value="Food">Food</option>
-          <option value="Bills">Bills</option>
-          <option value="Other">Other</option>
-        </select>
-
-        <label for="editTransactionType">Type</label>
-        <select id="editTransactionType" name="type" required>
-          <option value="">Select Type</option>
-          <option value="expense">Expense</option>
-          <option value="income">Income</option>
-        </select>
-
-        <div class="modal-buttons">
-          <button type="submit" class="save-btn">Save</button>
-          <button type="button" class="cancel-btn" id="editTransactionModalCancel">Cancel</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- Link to your main JavaScript -->
-  <script src="script.js"></script>
-
-  <script>
-    // Initialize Supabase client - Replace with your own credentials
-    const SUPABASE_URL = 'https://teafrrntffzraoiuurie.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRlYWZycm50ZmZ6cmFvaXV1cmllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM1OTMwMzgsImV4cCI6MjA2OTE2OTAzOH0.EZ7Lkxo_H1lZMMMH9OmjqKm3ALcIRripTzYrz7FosZs';
-    window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-    // Load initial data on page load
-    document.addEventListener('DOMContentLoaded', () => {
-      if (typeof loadTodos === 'function') loadTodos();
-      if (typeof loadContacts === 'function') loadContacts();
-      if (typeof loadFinance === 'function') loadFinance();
-    });
-  </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
