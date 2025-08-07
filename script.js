@@ -457,18 +457,38 @@ async function updateUsername() {
   const newU = document.getElementById('newUsername').value.trim();
   if (!newU) return alert('Please enter a new username.');
 
-  const userId = (await supabase.auth.getUser()).data.user.id;
-  const { error } = await supabase
+  // get current user ID
+  const { data: { user }, error: userErr } = await supabase.auth.getUser();
+  if (userErr) return alert('Error fetching user: ' + userErr.message);
+  const userId = user.id;
+
+  // 1️⃣ Check if username is already taken by someone else
+  const { count, error: countErr } = await supabase
+    .from('profiles')
+    .select('id', { count: 'exact', head: true })
+    .eq('username', newU)
+    .neq('id', userId);
+  if (countErr) {
+    return alert('Could not verify username availability: ' + countErr.message);
+  }
+  if (count > 0) {
+    return alert('That username is already taken. Please choose another.');
+  }
+
+  // 2️⃣ Proceed with update
+  const { error: updErr } = await supabase
     .from('profiles')
     .update({ username: newU })
     .eq('id', userId);
+  if (updErr) {
+    return alert('Username update failed: ' + updErr.message);
+  }
 
-  if (error) return alert('Username update failed: ' + error.message);
-
-  // reflect change in UI
+  // 3️⃣ Reflect change and notify
   document.getElementById('currentUsername').value = newU;
-  alert('Username updated!');
+  alert('Username updated successfully!');
 }
+
 
 async function updateEmail() {
   const newE = document.getElementById('newEmail').value.trim();
@@ -515,8 +535,8 @@ async function updatePassword() {
     .forEach(id => document.getElementById(id).value = '');
   alert('Password updated successfully!');
 }
+
 // =================== account deletation ===================
-// 1️⃣ The wrapper your button calls:
 function confirmDeleteAccount() {
   if (!confirm('This will permanently delete your account. Continue?')) return;
   deleteAccount();
