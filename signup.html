@@ -2,28 +2,406 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Finance Manager – Sign Up</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f8f9fa;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
+    
+    .form-container {
+      display: flex;
+      max-width: 900px;
+      width: 100%;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .icon-side {
+      width: 400px;
+      background: #2c3e50;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 30px 20px;
+      border-radius: 8px 0 0 8px;
+    }
+    
+    .icon-side i {
+      color: white;
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+    }
+    
+    .form-side {
+      flex: 1;
+      padding: 40px;
+    }
+    
+    .form-header {
+      margin-bottom: 30px;
+    }
+    
+    .form-header h3 {
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+    
+    .form-header p {
+      color: #6c757d;
+      font-size: 14px;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-label {
+      font-weight: 500;
+      font-size: 14px;
+      margin-bottom: 6px;
+      display: block;
+    }
+    
+    .input-group {
+      position: relative;
+    }
+    
+    .form-control {
+      border: 1px solid #ddd;
+      padding: 10px 15px 10px 35px;
+      border-radius: 6px;
+      width: 100%;
+      font-size: 14px;
+    }
+    
+    .form-control:focus {
+      border-color: #4361ee;
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.2);
+    }
+    
+    .form-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #6c757d;
+      font-size: 14px;
+    }
+    
+    .password-row {
+      display: flex;
+      gap: 15px;
+    }
+    
+    .password-col {
+      flex: 1;
+    }
+    
+    .password-toggle {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: #6c757d;
+      font-size: 14px;
+    }
+    
+    .password-rules {
+      margin-top: 15px;
+      font-size: 13px;
+      color: #6c757d;
+    }
+    
+    .rule {
+      display: flex;
+      align-items: center;
+      margin-bottom: 5px;
+    }
+    
+    .rule i {
+      margin-right: 6px;
+      font-size: 12px;
+      width: 16px;
+      text-align: center;
+    }
+    
+    .rule.valid {
+      color: #28a745;
+    }
+    
+    .btn-submit {
+      background: #4361ee;
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 6px;
+      width: 100%;
+      font-weight: 500;
+      margin-top: 10px;
+    }
+    
+    .login-link {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 14px;
+      color: #6c757d;
+    }
+    
+    .login-link a {
+      color: #4361ee;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    
+    @media (max-width: 768px) {
+      .form-container {
+        flex-direction: column;
+      }
+      
+      .icon-side {
+        width: 100%;
+        flex-direction: row;
+        padding: 15px;
+        border-radius: 8px 8px 0 0;
+      }
+      
+      .icon-side i {
+        margin-bottom: 0;
+        margin-right: 15px;
+      }
+      
+      .password-row {
+        flex-direction: column;
+        gap: 15px;
+      }
+    }
+  </style>
 </head>
-<body class="d-flex align-items-center justify-content-center vh-100">
-  <div class="card p-4" style="width: 320px;">
-    <h4 class="mb-3 text-center">Create Account</h4>
-    <form id="signupForm">
-      <div class="mb-3">
-        <label for="email">Email</label>
-        <input type="email" id="email" class="form-control" required>
+<body>
+  <div class="form-container">
+    <div class="icon-side">
+      <i class="fas fa-chart-line"></i>
+    </div>
+    
+    <div class="form-side">
+      <div class="form-header">
+        <h3>Create Account</h3>
+        <p>Register to start managing your finances</p>
       </div>
-      <div class="mb-3">
-        <label for="password">Password</label>
-        <input type="password" id="password" class="form-control" required>
-      </div>
-      <button class="btn btn-success w-100" type="submit">Sign Up</button>
-      <div class="text-center mt-3">
-        <a href="login.html">Already have an account? Sign in</a>
-      </div>
-    </form>
+      
+      <form id="signupForm">
+        <!-- AFTER -->
+<div class="d-flex gap-3 mb-3 flex-wrap">
+  <div class="form-group flex-fill">
+    <label for="username" class="form-label">Username</label>
+    <div class="input-group">
+      <i class="form-icon fas fa-user"></i>
+      <input type="text" id="username" class="form-control" placeholder="Choose a username" required>
+    </div>
   </div>
+  <div class="form-group flex-fill">
+    <label for="email" class="form-label">Email</label>
+    <div class="input-group">
+      <i class="form-icon fas fa-envelope"></i>
+      <input type="email" id="email" class="form-control" placeholder="Enter your email" required>
+    </div>
+  </div>
+</div>
+
+        
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <div class="password-row">
+            <div class="password-col">
+              <div class="input-group">
+                <i class="form-icon fas fa-lock"></i>
+                <input type="password" id="password" class="form-control" placeholder="Create password" required>
+                <i class="password-toggle fas fa-eye" id="passwordToggle"></i>
+              </div>
+            </div>
+            <div class="password-col">
+              <div class="input-group">
+                <i class="form-icon fas fa-lock"></i>
+                <input type="password" id="confirmPassword" class="form-control" placeholder="Confirm password" required>
+              </div>
+            </div>
+          </div>
+          
+          <div class="password-rules">
+            <div class="rule invalid" id="length-rule">
+              <i class="fas fa-circle"></i>
+              <span>At least 8 characters</span>
+            </div>
+            <div class="rule invalid" id="uppercase-rule">
+              <i class="fas fa-circle"></i>
+              <span>Uppercase letter</span>
+            </div>
+            <div class="rule invalid" id="lowercase-rule">
+              <i class="fas fa-circle"></i>
+              <span>Lowercase letter</span>
+            </div>
+            <div class="rule invalid" id="number-rule">
+              <i class="fas fa-circle"></i>
+              <span>Contains number</span>
+            </div>
+            <div class="rule invalid" id="special-rule">
+              <i class="fas fa-circle"></i>
+              <span>Special character</span>
+            </div>
+            <div class="rule invalid" id="match-message">
+              <i class="fas fa-times-circle"></i>
+              <span>Passwords must match</span>
+            </div>
+          </div>
+        </div>
+        
+        <button type="submit" class="btn-submit">Register</button>
+        
+        <div class="login-link">
+          <p>Already have an account? <a href="login.html">Sign in</a></p>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const passwordInput = document.getElementById('password');
+    const confirmPasswordInput = document.getElementById('confirmPassword');
+    const passwordToggle = document.getElementById('passwordToggle');
+    const matchMessage = document.getElementById('match-message');
+    const usernameInput = document.getElementById('username');
+    const emailInput = document.getElementById('email');
+
+    // SUPABASE SETUP
+    const supabase = window.supabase.createClient(
+      'https://teafrrntffzraoiuurie.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRlYWZycm50ZmZ6cmFvaXV1cmllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM1OTMwMzgsImV4cCI6MjA2OTE2OTAzOH0.EZ7Lkxo_H1lZMMMH9OmjqKm3ALcIRripTzYrz7FosZs'
+    );
+
+    const rules = {
+      length: document.getElementById('length-rule'),
+      uppercase: document.getElementById('uppercase-rule'),
+      lowercase: document.getElementById('lowercase-rule'),
+      number: document.getElementById('number-rule'),
+      special: document.getElementById('special-rule')
+    };
+
+    passwordToggle.addEventListener('click', function () {
+      const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+      passwordInput.setAttribute('type', type);
+      this.classList.toggle('fa-eye');
+      this.classList.toggle('fa-eye-slash');
+    });
+
+    function updateRule(ruleElement, isValid) {
+      if (isValid) {
+        ruleElement.classList.remove('invalid');
+        ruleElement.classList.add('valid');
+        ruleElement.querySelector('i').className = 'fas fa-check-circle';
+      } else {
+        ruleElement.classList.remove('valid');
+        ruleElement.classList.add('invalid');
+        ruleElement.querySelector('i').className = 'fas fa-circle';
+      }
+    }
+
+    function validatePassword(password) {
+      updateRule(rules.length, password.length >= 8);
+      updateRule(rules.uppercase, /[A-Z]/.test(password));
+      updateRule(rules.lowercase, /[a-z]/.test(password));
+      updateRule(rules.number, /\d/.test(password));
+      updateRule(rules.special, /[!@#$%^&*(),.?":{}|<>]/.test(password));
+    }
+
+    function checkPasswordMatch() {
+      const password = passwordInput.value;
+      const confirmPassword = confirmPasswordInput.value;
+
+      if (password === confirmPassword && password !== '') {
+        matchMessage.classList.remove('invalid');
+        matchMessage.classList.add('valid');
+        matchMessage.innerHTML = '<i class="fas fa-check-circle"></i> Passwords match';
+      } else {
+        matchMessage.classList.remove('valid');
+        matchMessage.classList.add('invalid');
+        matchMessage.innerHTML = '<i class="fas fa-times-circle"></i> Passwords must match';
+      }
+    }
+
+    passwordInput.addEventListener('input', function () {
+      validatePassword(this.value);
+      checkPasswordMatch();
+    });
+
+    confirmPasswordInput.addEventListener('input', checkPasswordMatch);
+
+    // FORM SUBMIT
+    document.getElementById('signupForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      const email = emailInput.value;
+      const username = usernameInput.value.trim().toLowerCase();
+      const password = passwordInput.value;
+      const confirmPassword = confirmPasswordInput.value;
+
+      const allRulesValid = Object.values(rules).every(rule =>
+        rule.classList.contains('valid')
+      );
+      const passwordsMatch = password === confirmPassword;
+
+      if (!allRulesValid || !passwordsMatch) {
+        alert('Please complete all password requirements and make sure passwords match.');
+        return;
+      }
+
+      // 1. CHECK IF USERNAME EXISTS IN 'profiles'
+      const { data: existingUser, error: fetchError } = await supabase
+        .from('profiles')
+        .select('id')
+        .eq('username', username)
+        .single();
+
+      if (existingUser) {
+        if (confirm("Username already exists. Would you like to login instead?")) {
+          window.location.href = 'login.html';
+        }
+        return;
+      }
+
+      // 2. SIGN UP USER IN SUPABASE
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: { username: username }
+        }
+      });
+
+      if (error) {
+        alert('Error: ' + error.message);
+      } else {
+        alert('Signup successful! Please check your email to confirm.');
+        window.location.href = 'login.html';
+      }
+    });
+  });
+</script>
+
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
   <script src="signup.js"></script>
