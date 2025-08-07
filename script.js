@@ -389,7 +389,7 @@ supabase.auth.onAuthStateChange((event, session) => {
                 setTimeout(() => notification.remove(), 300);
             }, 3000);
         }
-
+// ==========================================
 function showSection(section) {
   const dashboardSection = document.getElementById('dashboardSection');
   const settingsSection = document.getElementById('settingsSection');
@@ -420,5 +420,138 @@ function loadUserSettings() {
   if (user) {
     document.getElementById('currentUsername').value = user.username || '';
     document.getElementById('currentEmail').value = user.email || '';
+  }
+}
+
+// 1️⃣ Populate current username & email
+async function loadSettings() {
+  // fetch auth user
+  const { data: { user }, error: userErr } = await supabase.auth.getUser();
+  if (userErr) {
+    console.error('Error fetching user:', userErr);
+    return;
+  }
+
+  // put email into your existing <input id="currentEmail">
+  document.getElementById('currentEmail').value = user.email;
+
+  // fetch username from your profiles table
+  const { data: profile, error: profErr } = await supabase
+    .from('profiles')
+    .select('username')
+    .eq('id', user.id)
+    .single();
+  if (profErr) {
+    console.error('Error fetching profile:', profErr);
+    return;
+  }
+
+  // put username into your existing <input id="currentUsername">
+  document.getElementById('currentUsername').value = profile.username;
+}
+
+// call it on page load
+window.addEventListener('DOMContentLoaded', loadSettings);
+
+async function updateUsername() {
+  const newU = document.getElementById('newUsername').value.trim();
+  if (!newU) return alert('Please enter a new username.');
+
+  const userId = (await supabase.auth.getUser()).data.user.id;
+  const { error } = await supabase
+    .from('profiles')
+    .update({ username: newU })
+    .eq('id', userId);
+
+  if (error) return alert('Username update failed: ' + error.message);
+
+  // reflect change in UI
+  document.getElementById('currentUsername').value = newU;
+  alert('Username updated!');
+}
+
+async function updateEmail() {
+  const newE = document.getElementById('newEmail').value.trim();
+  if (!newE) return alert('Please enter a new email.');
+
+  const { error } = await supabase.auth.updateUser({ email: newE });
+  if (error) return alert('Email update failed: ' + error.message);
+
+  document.getElementById('currentEmail').value = newE;
+  document.getElementById('newEmail').value = '';
+  alert('Email updated! Check your inbox to verify.');
+}
+
+// ============new password section============
+async function updatePassword() {
+  const email       = document.getElementById('currentEmail').value;
+  const currentPwd  = document.getElementById('currentPassword').value;
+  const newPwd      = document.getElementById('newPassword').value;
+  const confirmPwd  = document.getElementById('confirmPassword').value;
+
+  // 1. Basic client-side validation
+  if (!currentPwd || !newPwd || !confirmPwd)
+    return alert('Please fill in all password fields.');
+  if (newPwd !== confirmPwd)
+    return alert('New passwords do not match.');
+
+  // 2. Re-authenticate with the old password
+  const { data: signInData, error: signInErr } = await supabase.auth.signInWithPassword({
+    email,
+    password: currentPwd
+  });
+  if (signInErr) {
+    return alert('Current password is incorrect.');
+  }
+
+  // 3. Now safe to update
+  const { error: updateErr } = await supabase.auth.updateUser({ password: newPwd });
+  if (updateErr) {
+    return alert('Password update failed: ' + updateErr.message);
+  }
+
+  // 4. Clean up UI & confirm
+  ['currentPassword','newPassword','confirmPassword']
+    .forEach(id => document.getElementById(id).value = '');
+  alert('Password updated successfully!');
+}
+// =================== account deletation ===================
+// 1️⃣ The wrapper your button calls:
+function confirmDeleteAccount() {
+  if (!confirm('This will permanently delete your account. Continue?')) return;
+  deleteAccount();
+}
+
+// 2️⃣ The actual deletion logic:
+async function deleteAccount() {
+  try {
+    // ▶️ Get the current user
+    const { data: { user }, error: userErr } = await supabase.auth.getUser();
+    if (userErr) throw userErr;
+    const userId = user.id;
+
+    // ▶️ Call your Edge Function to delete the Auth user
+    const resp = await fetch('/functions/delete-user', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId })
+    });
+    const { error: fnError } = await resp.json();
+    if (fnError) throw new Error(fnError);
+
+    // ▶️ Clean up the profiles table
+    const { error: delProfErr } = await supabase
+      .from('profiles')
+      .delete()
+      .eq('id', userId);
+    if (delProfErr) console.warn('Profile deletion failed:', delProfErr.message);
+
+    // ▶️ Sign out & redirect
+    await supabase.auth.signOut();
+    alert('Your account has been deleted.');
+    window.location.href = '/login.html';
+  } catch (err) {
+    alert('Error deleting account: ' + err.message);
+    console.error(err);
   }
 }
