@@ -389,3 +389,36 @@ supabase.auth.onAuthStateChange((event, session) => {
                 setTimeout(() => notification.remove(), 300);
             }, 3000);
         }
+
+function showSection(section) {
+  const dashboardSection = document.getElementById('dashboardSection');
+  const settingsSection = document.getElementById('settingsSection');
+
+  // Toggle visibility
+  if (section === 'dashboard') {
+    dashboardSection.classList.remove('d-none');
+    settingsSection.classList.add('d-none');
+    setActiveNav('navDashboard');
+  } else if (section === 'settings') {
+    dashboardSection.classList.add('d-none');
+    settingsSection.classList.remove('d-none');
+    setActiveNav('navSettings');
+    loadUserSettings(); // Optional: Load existing username/email
+  }
+}
+
+function setActiveNav(activeId) {
+  document.querySelectorAll('.sidebar-nav li').forEach(li => {
+    li.classList.remove('active');
+  });
+  const activeNav = document.getElementById(activeId);
+  if (activeNav) activeNav.classList.add('active');
+}
+
+function loadUserSettings() {
+  const user = JSON.parse(localStorage.getItem('userProfile'));
+  if (user) {
+    document.getElementById('currentUsername').value = user.username || '';
+    document.getElementById('currentEmail').value = user.email || '';
+  }
+}
