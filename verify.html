@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Verify OTP</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="container">
+    <h2>Verify your account</h2>
+    <p id="info">Enter the 6-digit code sent to your email.</p>
+
+    <form id="verify-form">
+      <label for="otp">OTP</label>
+      <input id="otp" name="otp" type="text" maxlength="6" autocomplete="one-time-code" required />
+      <button type="submit">Verify & Register</button>
+    </form>
+
+    <p id="resend">
+      Didn't receive it? <button id="resend-btn">Resend OTP</button>
+    </p>
+
+    <p id="message" aria-live="polite"></p>
+  </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+    const SUPABASE_URL = 'https://teafrrntffzraoiuurie.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRlYWZycm50ZmZ6cmFvaXV1cmllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM1OTMwMzgsImV4cCI6MjA2OTE2OTAzOH0.EZ7Lkxo_H1lZMMMH9OmjqKm3ALcIRripTzYrz7FosZs';
+
+  // Create a global client
+    window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    </script>
+  <script>
+  function maskEmail(email) {
+    const [local, domain] = email.split('@');
+    return `${local.charAt(0)}***@${domain}`;
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const pendingRaw = sessionStorage.getItem('pendingRegistration');
+    if (!pendingRaw) {
+      document.getElementById('message').innerText = 'No pending registration found. Please sign up first.';
+      setTimeout(() => location.href = 'signup.html', 2000);
+      return;
+    }
+
+    const pending = JSON.parse(pendingRaw);
+    const info = document.getElementById('info');
+    info.innerText = `Enter the 6-digit code sent to ${maskEmail(pending.email)}.`;
+
+    const form = document.getElementById('verify-form');
+    const msg = document.getElementById('message');
+    const resendBtn = document.getElementById('resend-btn');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const inputOtp = document.getElementById('otp').value.trim();
+
+      if (!inputOtp) return msg.innerText = 'Please enter the OTP.';
+      if (Date.now() > pending.otpExpiresAt) return msg.innerText = 'OTP expired. Please resend.';
+      if (inputOtp !== pending.otp) return msg.innerText = 'Incorrect OTP. Try again.';
+
+      msg.innerText = 'OTP correct — registering...';
+
+      try {
+        if (window.supabase) {
+          // 1️⃣ Create Auth User
+          const { data: authData, error: authError } = await window.supabase.auth.signUp({
+            email: pending.email,
+            password: pending.password
+          });
+
+          if (authError) {
+            console.error(authError);
+            msg.innerText = 'Auth error: ' + authError.message;
+            return;
+          }
+
+          // 2️⃣ Insert into Profiles table
+          const { error: profileError } = await window.supabase
+            .from('profiles')
+            .insert([
+              {
+                id: authData.user.id, // link to auth user id
+                username: pending.name,
+                email: pending.email
+              }
+            ]);
+
+          if (profileError) {
+            console.error(profileError);
+            msg.innerText = 'Profile insert error: ' + profileError.message;
+            return;
+          }
+
+          sessionStorage.removeItem('pendingRegistration');
+          msg.innerText = 'Registration successful! Redirecting...';
+          setTimeout(() => location.href = 'login.html', 1500);
+        } else {
+          msg.innerText = 'No Supabase client found.';
+        }
+      } catch (err) {
+        console.error(err);
+        msg.innerText = 'Unexpected error during registration.';
+      }
+    });
+
+    resendBtn.addEventListener('click', () => {
+      const newOtp = (Math.floor(100000 + Math.random() * 900000)).toString();
+      pending.otp = newOtp;
+      pending.otpExpiresAt = Date.now() + (10 * 60 * 1000);
+      sessionStorage.setItem('pendingRegistration', JSON.stringify(pending));
+      console.info(`DEV RESEND OTP for ${pending.email}: ${newOtp}`);
+      msg.innerText = 'A new OTP has been generated.';
+    });
+  });
+</script>
+
+</body>
+</html>

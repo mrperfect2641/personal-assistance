@@ -211,97 +211,112 @@
 </head>
 <body>
   <div class="form-container">
-    <div class="icon-side">
-      <i class="fas fa-chart-line"></i>
+  <div class="icon-side">
+    <i class="fas fa-chart-line"></i>
+  </div>
+
+  <div class="form-side">
+    <div class="form-header">
+      <h3>Create Account</h3>
+      <p>Register to start managing your finances</p>
     </div>
 
-    <div class="form-side">
-      <div class="form-header">
-        <h3>Create Account</h3>
-        <p>Register to start managing your finances</p>
+    <form id="signup-form" autocomplete="on">
+      <!-- Username + Email -->
+      <div class="row mb-3">
+        <div class="col-md-6 form-group">
+          <label for="name" class="form-label">Username</label>
+          <div class="input-group">
+            <i class="form-icon fas fa-user"></i>
+            <input type="text" id="name" name="name" class="form-control" placeholder="Choose a username" required>
+          </div>
+        </div>
+        <div class="col-md-6 form-group">
+          <label for="email" class="form-label">Email</label>
+          <div class="input-group">
+            <i class="form-icon fas fa-envelope"></i>
+            <input type="email" id="email" name="email" class="form-control" placeholder="Enter your email" required>
+          </div>
+        </div>
       </div>
 
-      <form id="signupForm">
-        <!-- Username + Email -->
-        <div class="row mb-3">
-          <div class="col-md-6 form-group">
-            <label for="username" class="form-label">Username</label>
-            <div class="input-group">
-              <i class="form-icon fas fa-user"></i>
-              <input type="text" id="username" class="form-control" placeholder="Choose a username" required>
-            </div>
-          </div>
-          <div class="col-md-6 form-group">
-            <label for="email" class="form-label">Email</label>
-            <div class="input-group">
-              <i class="form-icon fas fa-envelope"></i>
-              <input type="email" id="email" class="form-control" placeholder="Enter your email" required>
-            </div>
+      <!-- Passwords -->
+      <div class="row mb-3">
+        <div class="col-md-6 form-group">
+          <label for="password" class="form-label">Password</label>
+          <div class="input-group">
+            <i class="form-icon fas fa-lock"></i>
+            <input type="password" id="password" name="password" class="form-control" placeholder="Create password" required>
+            <i class="password-toggle fas fa-eye" id="passwordToggle" role="button" aria-label="Toggle password visibility"></i>
           </div>
         </div>
-
-        <!-- Passwords -->
-        <div class="row mb-3">
-          <div class="col-md-6 form-group">
-            <label for="password" class="form-label">Password</label>
-            <div class="input-group">
-              <i class="form-icon fas fa-lock"></i>
-              <input type="password" id="password" class="form-control" placeholder="Create password" required>
-              <i class="password-toggle fas fa-eye" id="passwordToggle"></i>
-            </div>
-          </div>
-          <div class="col-md-6 form-group">
-            <label for="confirmPassword" class="form-label">Confirm Password</label>
-            <div class="input-group">
-              <i class="form-icon fas fa-lock"></i>
-              <input type="password" id="confirmPassword" class="form-control" placeholder="Confirm password" required>
-            </div>
+        <div class="col-md-6 form-group">
+          <label for="confirmPassword" class="form-label">Confirm Password</label>
+          <div class="input-group">
+            <i class="form-icon fas fa-lock"></i>
+            <input type="password" id="confirmPassword" name="confirmPassword" class="form-control" placeholder="Confirm password" required>
           </div>
         </div>
+      </div>
 
-        <!-- Password rules -->
-        <div class="password-rules">
-          <div class="rule-col">
-            <div class="rule invalid" id="length-rule">
-              <i class="fas fa-circle"></i>
-              <span>At least 8 characters</span>
-            </div>
-            <div class="rule invalid" id="uppercase-rule">
-              <i class="fas fa-circle"></i>
-              <span>Uppercase letter</span>
-            </div>
-            <div class="rule invalid" id="lowercase-rule">
-              <i class="fas fa-circle"></i>
-              <span>Lowercase letter</span>
-            </div>
+      <!-- Password rules -->
+      <div class="password-rules">
+        <div class="rule-col">
+          <div class="rule invalid" id="length-rule">
+            <i class="fas fa-circle"></i>
+            <span>At least 8 characters</span>
           </div>
-          <div class="rule-col">
-            <div class="rule invalid" id="number-rule">
-              <i class="fas fa-circle"></i>
-              <span>Contains number</span>
-            </div>
-            <div class="rule invalid" id="special-rule">
-              <i class="fas fa-circle"></i>
-              <span>Special character</span>
-            </div>
-            <div class="rule invalid" id="match-message">
-              <i class="fas fa-times-circle"></i>
-              <span>Passwords must match</span>
-            </div>
+          <div class="rule invalid" id="uppercase-rule">
+            <i class="fas fa-circle"></i>
+            <span>Uppercase letter</span>
+          </div>
+          <div class="rule invalid" id="lowercase-rule">
+            <i class="fas fa-circle"></i>
+            <span>Lowercase letter</span>
           </div>
         </div>
-
-        <button type="submit" class="btn-submit">Register</button>
-
-        <div class="login-link">
-          <p>Already have an account? <a href="login.html">Sign in</a></p>
+        <div class="rule-col">
+          <div class="rule invalid" id="number-rule">
+            <i class="fas fa-circle"></i>
+            <span>Contains number</span>
+          </div>
+          <div class="rule invalid" id="special-rule">
+            <i class="fas fa-circle"></i>
+            <span>Special character</span>
+          </div>
+          <div class="rule invalid" id="match-message">
+            <i class="fas fa-times-circle"></i>
+            <span>Passwords must match</span>
+          </div>
         </div>
-      </form>
-    </div>
+      </div>
+
+      <button type="submit" class="btn-submit">Register</button>
+
+      <div class="login-link">
+        <p>Already have an account? <a href="login.html">Sign in</a></p>
+      </div>
+    </form>
   </div>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-  <script src="signup.js"></script>
+</div>
+  <!-- Load Supabase client -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
+<!-- Load EmailJS SDK from working CDN -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+
+<!-- Init EmailJS AFTER loading SDK -->
+<script>
+  (function() {
+    emailjs.init('-lwffzBCjzXhsZ1tD'); // replace with your EmailJS Public Key
+  })();
+</script>
+
+<!-- Now load your signup script -->
+<script src="signup.js"></script>
+
+<!-- Finally, load signup.js which uses emailjs -->
+<script src="signup.js"></script>
   <!-- Username Exists Modal -->
 <div id="usernameExistsModal" class="custom-modal d-none">
   <div class="custom-modal-content">
