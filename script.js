@@ -46,15 +46,32 @@ async function checkAuth() {
     error,
   } = await supabase.auth.getSession();
   if (error || !session) {
-    // no session → redirect
     return (window.location.href = "login.html");
   }
   currentUser = session.user;
-  document.getElementById("usernameDisplay").textContent = currentUser.email;
+
+  // Fetch username from profiles table
+  const { data: profile, error: profileErr } = await supabase
+    .from("profiles")
+    .select("username")
+    .eq("id", currentUser.id)
+    .single();
+
+  const displayName = profile && profile.username ? profile.username : currentUser.email;
+  document.getElementById("usernameDisplay").textContent = displayName;
+
   loadTransactions();
 }
 
-// Setup event listeners
+// Settings button from dropdown
+// Prevent double-initialization / stacked backdrops
+function showLogoutModal() {
+  const modalEl = document.getElementById("logoutModal");
+  if (!modalEl) return console.warn("logoutModal element not found");
+  const modal = bootstrap.Modal.getOrCreateInstance(modalEl); // reuses existing instance
+  modal.show();
+}
+
 function setupEventListeners() {
   // Sidebar toggle for mobile
   sidebarToggle.addEventListener("click", () => {
@@ -78,29 +95,31 @@ function setupEventListeners() {
     loadTransactions();
   });
 
-  // Logout buttons
-  // logoutButton.addEventListener('click', logout);
-  logoutDropdown.addEventListener("click", logout);
+  // Settings button from dropdown
+  document.getElementById("settingsDropdown").addEventListener("click", () => {
+    showSection('settings');
+  });
 
-  // instead of calling logout() directly, show the modal
+  // Logout buttons → show modal instead of logging out immediately
   document.getElementById("logoutButton").addEventListener("click", () => {
-    const logoutModal = new bootstrap.Modal(
-      document.getElementById("logoutModal")
-    );
+    const logoutModal = new bootstrap.Modal(document.getElementById("logoutModal"));
+    logoutModal.show();
+  });
+  document.getElementById("logoutDropdown").addEventListener("click", () => {
+    const logoutModal = new bootstrap.Modal(document.getElementById("logoutModal"));
     logoutModal.show();
   });
 
-  // when the user confirms in the modal, actually sign out
-  document
-    .getElementById("confirmLogoutBtn")
-    .addEventListener("click", async () => {
-      const { error } = await supabase.auth.signOut();
-      if (error) {
-        return showNotification("Logout failed: " + error.message, "error");
-      }
-      window.location.href = "login.html";
-    });
+  // Confirm logout
+  document.getElementById("confirmLogoutBtn").addEventListener("click", async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      return showNotification("Logout failed: " + error.message, "error");
+    }
+    window.location.href = "login.html";
+  });
 }
+
 
 // Add transaction
 async function addTransaction() {

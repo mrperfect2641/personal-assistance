@@ -807,3 +807,8 @@ button,
   .mobile-toggle { width: 42px; height: 42px; top: 8px; left: 8px; }
   .table { min-width: 320px; } /* smaller min-width to reduce scrolling when possible */
 }
+
+.user-profile .dropdown:hover .dropdown-menu {
+  display: block;
+  margin-top: 0; /* Prevent jump */
+}
