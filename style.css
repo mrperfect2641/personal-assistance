@@ -812,3 +812,78 @@ button,
   display: block;
   margin-top: 0; /* Prevent jump */
 }
+
+/* Ensure transactions table scrolls on mobile */
+@media (max-width: 768px) {
+  .table-responsive {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+  }
+  .table-responsive table {
+    min-width: 600px; /* ensure columns don't squish too much */
+  }
+}
+/* +++++++++++++++++++++++ */
+
+/* Limit Recent Transactions height and enable vertical scroll */
+.transactions-scroll {
+  max-height: 400px; /* adjust this height as you prefer */
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ======================== */
+/* ---------- Recent Transactions scroll behaviour ---------- */
+
+/* Make the table area grow, then scroll when it reaches max height */
+.recent-transactions-card {
+  /* clip inner content to card rounded corners so scroll area visually merges */
+  overflow: hidden;
+  position: relative;
+}
+
+/* The actual scrollable area inside the card */
+.transactions-scroll {
+  max-height: calc(85vh - 320px); /* default - fine-tune below in JS for exact fit */
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  background: transparent;   /* let the card show through */
+  padding: 0;                /* remove internal extra padding so table aligns with card edges */
+  margin: 0;
+}
+
+/* Ensure the table takes full width without extra spacing inside the scroll container */
+.transactions-scroll .table {
+  margin-bottom: 0;
+  background: transparent;
+  border-collapse: collapse;
+}
+
+/* Make the table header sticky inside the scrollable area so headers remain visible */
+.transactions-scroll thead th {
+  position: sticky;
+  top: 0;
+  z-index: 6;               /* above rows */
+  background: #fff;         /* match the card/table header color */
+  box-shadow: 0 1px 0 rgba(0,0,0,0.04);
+}
+
+/* small visual tweak so the bottom of card and table align perfectly */
+.recent-transactions-card .card-header {
+  z-index: 7;
+  position: relative;
+}
+
+/* mobile-specific tuning */
+@media (max-width: 992px) {
+  .transactions-scroll {
+    max-height: calc(100vh - 260px);
+  }
+}
+
+/* fallback (small phone) */
+@media (max-width: 576px) {
+  .transactions-scroll {
+    max-height: calc(100vh - 220px);
+  }
+}
