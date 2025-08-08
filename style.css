@@ -712,3 +712,98 @@ button,
 }
 
 /* End of file */
+/* === Mobile-only overrides (paste at end of style.css) === */
+@media (max-width: 767px) {
+
+  /* Prevent accidental horizontal scrolling */
+  html, body {
+    overflow-x: hidden !important;
+  }
+
+  /* Sidebar: off-canvas — hidden by default; add .open to show */
+  .sidebar {
+    transform: translateX(-110%);
+    width: 90%;
+    max-width: 340px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    z-index: 1400;
+    padding: 14px;
+    transition: transform 260ms ease-in-out, box-shadow 260ms;
+    -webkit-overflow-scrolling: touch;
+  }
+  .sidebar.open,
+  .sidebar.active {
+    transform: translateX(0);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.45);
+  }
+
+  /* Hide desktop left margin — let main-content be full width on mobile */
+  .main-content {
+    margin-left: 0 !important;
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+
+  /* Mobile header: make it compact and stack if needed */
+  .top-nav {
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 0;
+  }
+
+  /* Hide the large search box on narrow phones (keeps header compact) */
+  .search-bar { display: none !important; }
+
+  /* Reduce global paddings and font sizes for mobile */
+  body { font-size: 13px; }
+  .card { padding: 10px; border-radius: 10px; }
+  .card-header { padding: 10px 8px; }
+  .card-body { padding: 8px; }
+
+  /* Summary / stats: stack vertically and take full width */
+  .summary-row { display: flex; flex-direction: column; gap: 8px; }
+  .summary-col { width: 100%; min-width: 0; }
+
+  /* Chart cards: constrain height so chart won't overflow the screen */
+  .charts-row .card { min-height: 200px; max-height: 360px; overflow: hidden; }
+  .chart-container, canvas { width: 100% !important; height: auto !important; max-height: 320px; }
+
+  /* Transactions: ensure rows wrap and don't push width */
+  .transactions-list { max-height: 320px; overflow-y: auto; -webkit-overflow-scrolling: touch; padding-right: 6px; }
+  .transaction-row { flex-wrap: wrap; gap: 8px; align-items: flex-start; }
+
+  /* Tables: switch to horizontal scroll inside container, do not force page width */
+  .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; width: 100%; }
+  .table { min-width: 420px; } /* table will scroll inside .table-responsive */
+  /* if your table is small, remove min-width with JS or additional class; this avoids breaking readability */
+  .table th, .table td { padding: 8px 10px; font-size: 13px; white-space: nowrap; }
+
+  /* Forms / inputs / buttons bigger for touch */
+  .form-control, .form-select { padding: 10px 12px; font-size: 1rem; }
+  .btn { min-height: 44px; padding: 10px 12px; }
+
+  /* Mobile toggle button visible only on mobile */
+  .mobile-toggle { display: inline-flex !important; position: fixed; top: 10px; left: 10px; z-index: 1500; }
+
+  /* Notification adjust */
+  .notification { right: 12px; left: 12px; max-width: calc(100% - 24px); }
+
+  /* Final horizontal overflow safeguards */
+  html, body, .dashboard-container, .main-content, .sidebar, .card, .transaction-row, .table-responsive {
+    overflow-x: hidden !important;
+    max-width: 100% !important;
+  }
+}
+
+/* === Tiny extra step for very small phones (<= 420px) === */
+@media (max-width: 420px) {
+  .charts-row .card { min-height: 180px; }
+  body { font-size: 12.8px; }
+  .card { padding: 9px; }
+  .mobile-toggle { width: 42px; height: 42px; top: 8px; left: 8px; }
+  .table { min-width: 320px; } /* smaller min-width to reduce scrolling when possible */
+}
